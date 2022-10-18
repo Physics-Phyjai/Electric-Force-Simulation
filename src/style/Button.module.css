@@ -1,0 +1,15 @@
+.button {
+    text-align: center;
+    padding: .75rem 1.25rem;
+    color: white;
+    background: #858DE8;
+    border-radius: 20px;
+    min-width: 100px;
+    cursor: pointer;
+}
+
+.button.outlined {
+    color: #858DE8;
+    background: white;
+    border: 1px solid #858DE8;
+}

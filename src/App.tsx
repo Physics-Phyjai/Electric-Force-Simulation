@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
 import style from "./style/App.module.css";
 import { Charge } from "./type/charge";
@@ -16,6 +17,9 @@ function App() {
     <div className={style.app}>
       <div className={style.leftPanel}>
         {chargeList.map((charge) => (<ChargeCard charge={charge} />))}
+        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+          <Button text="Add new charge" icon="plus" onClick={() => {}} />
+        </div>
       </div>
       <div className={style.rightPanel}>Test 2</div>
     </div>
