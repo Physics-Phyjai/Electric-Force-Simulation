@@ -9,12 +9,12 @@
     max-width: 400px;
     height: 100vh;
     background: #F1F1F1;
-    padding: 1rem 2rem;
+    padding: 0rem 2rem;
 }
 
 .rightPanel {
     min-width: 75vw;
     height: 100vh;
     flex: 1 1 auto;
-    background: blue;
+    display: flex;
 }
