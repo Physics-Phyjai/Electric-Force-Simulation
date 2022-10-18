@@ -1,34 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
-
+import { useEffect, useState } from "react";
+import ChargeCard from "./components/ChargeCard";
+import style from "./style/App.module.css";
+import { Charge } from "./type/charge";
 function App() {
-  const [count, setCount] = useState(0)
+  const [chargeList, setChargeList] = useState<Array<Charge>>([]);
 
+  useEffect(() => {
+    setChargeList([
+      new Charge("Charge 1", 2, 10, 10, "#FF0000"),
+      new Charge("Charge 2", 2, 10, 10, "#00FF00"),
+      new Charge("Charge 3", 2, 10, 10, "#0000FF"),
+    ]);
+  }, []);
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className={style.app}>
+      <div className={style.leftPanel}>
+        {chargeList.map((charge) => (<ChargeCard charge={charge} />))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div className={style.rightPanel}>Test 2</div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
