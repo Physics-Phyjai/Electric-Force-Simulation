@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
 import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
 import { findForce } from "./functionality/force";
@@ -8,6 +8,15 @@ import { CanvasSize, Position } from "./type/canvas";
 import { Charge } from "./type/charge";
 import { Force } from "./type/force";
 function App() {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
   const [chargeList, setChargeList] = useState<Array<Charge>>([]);
   const [chargeForceList, setChargeForceList] = useState<Array<Charge>>([]);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -35,21 +44,14 @@ function App() {
     setChargeList([
       new Charge("Charge 1", 2, 2, 0, "#FF0000", new Force(0, 0, 0)),
     ]);
-    const canvas: HTMLCanvasElement = document.getElementById(
-      "canvas"
-    ) as HTMLCanvasElement;
-    const parent = canvas.parentElement;
-    canvas.width = parent?.offsetWidth ?? 1000;
-    canvas.height = parent?.offsetHeight ?? 1000;
+    const canvas = initializeCanvas();
     const ctx = canvas.getContext("2d");
-    setCanvasSize({ width: canvas.width, height: canvas.height });
-    setCanvasOffset({ x: parent?.offsetLeft ?? 0, y: parent?.offsetTop ?? 0 });
     setCanvasCTX(ctx);
-    setCurrentPosition({
-      x: 2550 - canvas.width / 2,
-      y: 2550 - canvas.height / 2,
-    });
   }, []);
+
+  useEffect(() => {
+    initializeCanvas();
+  }, [size])
 
   useEffect(() => {
     setChargeForceList(findForce(chargeList));
@@ -92,6 +94,22 @@ function App() {
       });
     }
   }, [chargeForceList, currentPosition.x, currentPosition.y]);
+
+  const initializeCanvas = () : HTMLCanvasElement => {
+    const canvas: HTMLCanvasElement = document.getElementById(
+      "canvas"
+    ) as HTMLCanvasElement;
+    const parent = canvas.parentElement;
+    canvas.width = parent?.offsetWidth ?? 1000;
+    canvas.height = parent?.offsetHeight ?? 1000;
+    setCanvasSize({ width: canvas.width, height: canvas.height });
+    setCanvasOffset({ x: parent?.offsetLeft ?? 0, y: parent?.offsetTop ?? 0 });
+    setCurrentPosition({
+      x: 2550 - canvas.width / 2,
+      y: 2550 - canvas.height / 2,
+    });
+    return canvas;
+  }
 
   const handleMouseMove = (event: MouseEvent<HTMLCanvasElement>) => {
     if (isDragging) {
