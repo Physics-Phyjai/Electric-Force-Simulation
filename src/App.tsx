@@ -3,6 +3,7 @@ import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
 import style from "./style/App.module.css";
 import { Charge } from "./type/charge";
+import { Force } from "./type/force";
 function App() {
   const [chargeList, setChargeList] = useState<Array<Charge>>([]);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -24,9 +25,8 @@ function App() {
 
   useEffect(() => {
     setChargeList([
-      new Charge("Charge 1", 2, 10, 10, "#FF0000"),
-      new Charge("Charge 2", 2, 10, 10, "#00FF00"),
-      new Charge("Charge 3", 2, 10, 10, "#0000FF"),
+      new Charge("Charge 1", 2, 2, 0, "#FF0000", new Force(5, 0, 1)),
+      new Charge("Charge 2", 2, 2, 2, "#00FF00", new Force(5, 0, -1)),
     ]);
     const canvas: HTMLCanvasElement = document.getElementById(
       "canvas"
@@ -73,6 +73,9 @@ function App() {
         101 - Math.floor(currentPosition.x / 25),
         101 - Math.floor(currentPosition.y / 25)
       );
+      chargeList.forEach((charge) => {
+        drawCharge(charge);
+      });
     }
   }, [currentPosition.x, currentPosition.y]);
 
@@ -107,6 +110,47 @@ function App() {
         x: currentPosition.x + (event.clientX - mousePosition.x),
         y: currentPosition.y + (event.clientY - mousePosition.y),
       });
+    }
+  };
+
+  const drawCharge = (charge: Charge) => {
+    if (canvasCTX) {
+      const fromX = (101 - Math.floor(currentPosition.x / 25) + charge.x) * 25;
+      const fromY = (101 - Math.floor(currentPosition.y / 25) + charge.y) * 25;
+      const toX = fromX - charge.force.i * charge.force.magnitude * 25;
+      const toY = fromY - charge.force.j * charge.force.magnitude * 25;
+      const dx = toX - fromX;
+      const dy = toY - fromY;
+      const angle = Math.atan2(dy, dx);
+      canvasCTX.fillStyle = charge.color;
+      canvasCTX.strokeStyle = charge.color;
+      canvasCTX.beginPath();
+      canvasCTX.moveTo(fromX, fromY);
+      canvasCTX.lineTo(toX, toY);
+      canvasCTX.stroke();
+      canvasCTX.closePath();
+      canvasCTX.beginPath();
+      canvasCTX.moveTo(toX, toY);
+      canvasCTX.lineTo(
+        toX - 5 * Math.cos(angle - Math.PI / 6),
+        toY - 5 * Math.sin(angle - Math.PI / 6)
+      );
+      canvasCTX.stroke();
+      canvasCTX.closePath();
+      canvasCTX.beginPath();
+      canvasCTX.moveTo(toX, toY);
+      canvasCTX.lineTo(
+        toX - 5 * Math.cos(angle + Math.PI / 6),
+        toY - 5 * Math.sin(angle + Math.PI / 6)
+      );
+      canvasCTX.stroke();
+      canvasCTX.closePath();
+      canvasCTX.beginPath();
+      canvasCTX.arc(fromX, fromY, charge.charge * 5, 0, 2 * Math.PI);
+      canvasCTX.fill();
+      canvasCTX.closePath();
+      canvasCTX.strokeStyle = "#000000";
+      canvasCTX.fillStyle = "#000000";
     }
   };
 
@@ -271,6 +315,30 @@ function App() {
           onMouseDown={handleMouseDown}
           onMouseOut={handleMouseOut}
         ></canvas>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          right: 25,
+          bottom: 25,
+          cursor: "pointer",
+          background: "#ccc",
+          borderRadius: "50%",
+          padding: 10,
+          width: "25px",
+          height: "25px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={() => {
+          setCurrentPosition({
+            x: 2550 - canvasSize.width / 2,
+            y: 2550 - canvasSize.height / 2,
+          });
+        }}
+      >
+        ⭕️
       </div>
     </div>
   );
