@@ -2,6 +2,7 @@ import { Charge } from "../type/charge";
 import { Force } from "../type/force";
 
 const findForce = (chargeList: Array<Charge>): Array<Charge> => {
+  if(chargeList.length <= 1) return chargeList;
   const data = <Array<Array<Force>>>[];
   for (let i = 0; i < chargeList.length; i++) {
     data[i] = <Array<Force>>[];

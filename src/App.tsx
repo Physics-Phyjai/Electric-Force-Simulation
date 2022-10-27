@@ -1,4 +1,4 @@
-import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
 import { findForce } from "./functionality/force";
@@ -34,8 +34,6 @@ function App() {
   useEffect(() => {
     setChargeList([
       new Charge("Charge 1", 2, 2, 0, "#FF0000", new Force(0, 0, 0)),
-      new Charge("Charge 2", 2, 2, -2, "#00FF00", new Force(0, 0, 0)),
-      new Charge("Charge 3", 4, 0, -1, "#0000FF", new Force(0, 0, 0)),
     ]);
     const canvas: HTMLCanvasElement = document.getElementById(
       "canvas"
@@ -56,10 +54,6 @@ function App() {
   useEffect(() => {
     setChargeForceList(findForce(chargeList));
   }, [chargeList]);
-
-  useEffect(() => {
-    console.log(chargeForceList);
-  }, [chargeForceList])
 
   useEffect(() => {
     if (canvasCTX) {
@@ -144,20 +138,44 @@ function App() {
     }
   };
 
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
   return (
     <div className={style.app}>
       <div className={style.leftPanel}>
+        <div style={{maxHeight:'95vh', overflow:'scroll'}}>
         {chargeList.map((charge) => (
           <ChargeCard charge={charge} key={charge.name} />
         ))}
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button text="Add new charge" icon="plus" onClick={() => {}} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end", height:'5vh' }}>
+          <Button
+            text="Add new charge"
+            icon="plus"
+            onClick={() => {
+              const newCharge = new Charge(
+                "Charge " + (chargeList.length + 1),
+                Math.floor(Math.random() * 3) + 1,
+                Math.floor(Math.random() * 10 - 5),
+                Math.floor(Math.random() * 10 - 5),
+                getRandomColor(),
+                new Force(0, 0, 0)
+              );
+              setChargeList([...chargeList, newCharge]);
+            }}
+          />
         </div>
       </div>
       <div className={style.rightPanel}>
         <canvas
           id="canvas"
-          style={{ cursor: "pointer" }}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseDown={handleMouseDown}
