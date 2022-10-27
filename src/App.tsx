@@ -44,7 +44,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("CurrentPosition: ", currentPosition.x, currentPosition.y);
     if (canvasCTX) {
       canvasCTX.moveTo(0, 0);
       canvasCTX.clearRect(0, 0, canvasSize.width, canvasSize.height);
@@ -260,13 +259,7 @@ function App() {
           <ChargeCard charge={charge} key={charge.name} />
         ))}
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            text="Add new charge"
-            icon="plus"
-            onClick={() => {
-              // canvasCTX?.clearRect(, 0, canvasSize.width, canvasSize.height);
-            }}
-          />
+          <Button text="Add new charge" icon="plus" onClick={() => {}} />
         </div>
       </div>
       <div className={style.rightPanel}>
