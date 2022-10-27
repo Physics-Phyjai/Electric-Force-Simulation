@@ -1,32 +1,41 @@
 import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
 import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
+import { findForce } from "./functionality/force";
+import { drawCharge, drawGrid, isOnCharge } from "./functionality/graph";
 import style from "./style/App.module.css";
+import { CanvasSize, Position } from "./type/canvas";
 import { Charge } from "./type/charge";
 import { Force } from "./type/force";
 function App() {
   const [chargeList, setChargeList] = useState<Array<Charge>>([]);
+  const [chargeForceList, setChargeForceList] = useState<Array<Charge>>([]);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
+  const [mousePosition, setMousePosition] = useState<Position>({
     x: 0,
     y: 0,
   });
-  const [currentPosition, setCurrentPosition] = useState<{
-    x: number;
-    y: number;
-  }>({ x: 0, y: 0 });
+  const [currentPosition, setCurrentPosition] = useState<Position>({
+    x: 0,
+    y: 0,
+  });
+  const [canvasOffset, setCanvasOffset] = useState<Position>({
+    x: 0,
+    y: 0,
+  });
   const [canvasCTX, setCanvasCTX] = useState<CanvasRenderingContext2D | null>(
     null
   );
-  const [canvasSize, setCanvasSize] = useState<{
-    width: number;
-    height: number;
-  }>({ width: 0, height: 0 });
+  const [canvasSize, setCanvasSize] = useState<CanvasSize>({
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     setChargeList([
-      new Charge("Charge 1", 2, 2, 0, "#FF0000", new Force(5, 0, 1)),
-      new Charge("Charge 2", 2, 2, 2, "#00FF00", new Force(5, 0, -1)),
+      new Charge("Charge 1", 2, 2, 0, "#FF0000", new Force(0, 0, 0)),
+      new Charge("Charge 2", 2, 2, -2, "#00FF00", new Force(0, 0, 0)),
+      new Charge("Charge 3", 4, 0, -1, "#0000FF", new Force(0, 0, 0)),
     ]);
     const canvas: HTMLCanvasElement = document.getElementById(
       "canvas"
@@ -36,12 +45,21 @@ function App() {
     canvas.height = parent?.offsetHeight ?? 1000;
     const ctx = canvas.getContext("2d");
     setCanvasSize({ width: canvas.width, height: canvas.height });
+    setCanvasOffset({ x: parent?.offsetLeft ?? 0, y: parent?.offsetTop ?? 0 });
     setCanvasCTX(ctx);
     setCurrentPosition({
       x: 2550 - canvas.width / 2,
       y: 2550 - canvas.height / 2,
     });
   }, []);
+
+  useEffect(() => {
+    setChargeForceList(findForce(chargeList));
+  }, [chargeList]);
+
+  useEffect(() => {
+    console.log(chargeForceList);
+  }, [chargeForceList])
 
   useEffect(() => {
     if (canvasCTX) {
@@ -70,14 +88,16 @@ function App() {
         return;
       }
       drawGrid(
+        canvasCTX,
+        canvasSize,
         101 - Math.floor(currentPosition.x / 25),
         101 - Math.floor(currentPosition.y / 25)
       );
-      chargeList.forEach((charge) => {
-        drawCharge(charge);
+      chargeForceList.forEach((charge) => {
+        drawCharge(canvasCTX, currentPosition, charge);
       });
     }
-  }, [currentPosition.x, currentPosition.y]);
+  }, [chargeForceList, currentPosition.x, currentPosition.y]);
 
   const handleMouseMove = (event: MouseEvent<HTMLCanvasElement>) => {
     if (isDragging) {
@@ -90,8 +110,19 @@ function App() {
   };
 
   const handleMouseDown = (event: MouseEvent<HTMLCanvasElement>) => {
-    setIsDragging(true);
+    let onCharge = false;
     setMousePosition({ x: event.clientX, y: event.clientY });
+    const position: Position = {
+      x: event.clientX - canvasOffset.x,
+      y: event.clientY - canvasOffset.y,
+    };
+    chargeList.forEach((charge) => {
+      if (isOnCharge(position, currentPosition, charge)) {
+        onCharge = true;
+      }
+    });
+
+    setIsDragging(true);
   };
 
   const handleMouseUp = (event: MouseEvent<HTMLCanvasElement>) => {
@@ -113,189 +144,6 @@ function App() {
     }
   };
 
-  const drawCharge = (charge: Charge) => {
-    if (canvasCTX) {
-      const fromX = (101 - Math.floor(currentPosition.x / 25) + charge.x) * 25;
-      const fromY = (101 - Math.floor(currentPosition.y / 25) + charge.y) * 25;
-      const toX = fromX - charge.force.i * charge.force.magnitude * 25;
-      const toY = fromY - charge.force.j * charge.force.magnitude * 25;
-      const dx = toX - fromX;
-      const dy = toY - fromY;
-      const angle = Math.atan2(dy, dx);
-      canvasCTX.fillStyle = charge.color;
-      canvasCTX.strokeStyle = charge.color;
-      canvasCTX.beginPath();
-      canvasCTX.moveTo(fromX, fromY);
-      canvasCTX.lineTo(toX, toY);
-      canvasCTX.stroke();
-      canvasCTX.closePath();
-      canvasCTX.beginPath();
-      canvasCTX.moveTo(toX, toY);
-      canvasCTX.lineTo(
-        toX - 5 * Math.cos(angle - Math.PI / 6),
-        toY - 5 * Math.sin(angle - Math.PI / 6)
-      );
-      canvasCTX.stroke();
-      canvasCTX.closePath();
-      canvasCTX.beginPath();
-      canvasCTX.moveTo(toX, toY);
-      canvasCTX.lineTo(
-        toX - 5 * Math.cos(angle + Math.PI / 6),
-        toY - 5 * Math.sin(angle + Math.PI / 6)
-      );
-      canvasCTX.stroke();
-      canvasCTX.closePath();
-      canvasCTX.beginPath();
-      canvasCTX.arc(fromX, fromY, charge.charge * 5, 0, 2 * Math.PI);
-      canvasCTX.fill();
-      canvasCTX.closePath();
-      canvasCTX.strokeStyle = "#000000";
-      canvasCTX.fillStyle = "#000000";
-    }
-  };
-
-  const drawGrid = (
-    y_axis_distance_grid_lines = 0,
-    x_axis_distance_grid_lines = 0
-  ) => {
-    var grid_size = 25;
-
-    var num_lines_x = Math.floor(201);
-    var num_lines_y = Math.floor(201);
-    if (canvasCTX) {
-      for (var i = 0; i <= num_lines_x; i++) {
-        canvasCTX.beginPath();
-        canvasCTX.lineWidth = 1;
-
-        if (i == x_axis_distance_grid_lines) canvasCTX.strokeStyle = "#000000";
-        else canvasCTX.strokeStyle = "#e9e9e9";
-
-        if (i == num_lines_x) {
-          canvasCTX.moveTo(0, grid_size * i);
-          canvasCTX.lineTo(canvasSize.width, grid_size * i);
-        } else {
-          canvasCTX.moveTo(0, grid_size * i + 0.5);
-          canvasCTX.lineTo(canvasSize.width, grid_size * i + 0.5);
-        }
-        canvasCTX.stroke();
-      }
-
-      for (i = 0; i <= num_lines_y; i++) {
-        canvasCTX.beginPath();
-        canvasCTX.lineWidth = 1;
-        if (i == y_axis_distance_grid_lines) canvasCTX.strokeStyle = "#000000";
-        else canvasCTX.strokeStyle = "#e9e9e9";
-
-        if (i == num_lines_y) {
-          canvasCTX.moveTo(grid_size * i, 0);
-          canvasCTX.lineTo(grid_size * i, canvasSize.height);
-        } else {
-          canvasCTX.moveTo(grid_size * i + 0.5, 0);
-          canvasCTX.lineTo(grid_size * i + 0.5, canvasSize.height);
-        }
-        canvasCTX.stroke();
-      }
-
-      for (i = 1; i < num_lines_y - y_axis_distance_grid_lines; i++) {
-        canvasCTX.beginPath();
-        canvasCTX.lineWidth = 1;
-        canvasCTX.strokeStyle = "#000000";
-
-        canvasCTX.moveTo(
-          grid_size * i + 0.5,
-          25 * x_axis_distance_grid_lines - 3
-        );
-        canvasCTX.lineTo(
-          grid_size * i + 0.5,
-          25 * x_axis_distance_grid_lines + 3
-        );
-        canvasCTX.stroke();
-
-        canvasCTX.font = "10px Inter";
-        canvasCTX.textAlign = "start";
-        canvasCTX.fillText(
-          `${i}`,
-          25 * y_axis_distance_grid_lines + grid_size * i - 2,
-          25 * x_axis_distance_grid_lines + 15
-        );
-      }
-      canvasCTX.fillText(
-        `0`,
-        25 * y_axis_distance_grid_lines + 5,
-        25 * x_axis_distance_grid_lines + 15
-      );
-
-      for (i = 1; i < y_axis_distance_grid_lines; i++) {
-        canvasCTX.beginPath();
-        canvasCTX.lineWidth = 1;
-        canvasCTX.strokeStyle = "#000000";
-
-        canvasCTX.moveTo(
-          grid_size * i + 0.5,
-          25 * x_axis_distance_grid_lines - 3
-        );
-        canvasCTX.lineTo(
-          grid_size * i + 0.5,
-          25 * x_axis_distance_grid_lines + 3
-        );
-        canvasCTX.stroke();
-
-        canvasCTX.font = "10px Inter";
-        canvasCTX.textAlign = "end";
-        canvasCTX.fillText(
-          `-${i}`,
-          25 * y_axis_distance_grid_lines + -grid_size * i + 3,
-          25 * x_axis_distance_grid_lines + 15
-        );
-      }
-
-      for (i = 1; i < num_lines_x - x_axis_distance_grid_lines; i++) {
-        canvasCTX.beginPath();
-        canvasCTX.lineWidth = 1;
-        canvasCTX.strokeStyle = "#000000";
-
-        canvasCTX.moveTo(
-          25 * y_axis_distance_grid_lines - 3,
-          grid_size * i + 0.5
-        );
-        canvasCTX.lineTo(
-          25 * y_axis_distance_grid_lines + 3,
-          grid_size * i + 0.5
-        );
-        canvasCTX.stroke();
-        canvasCTX.font = "10px Inter";
-        canvasCTX.textAlign = "start";
-        canvasCTX.fillText(
-          `-${i}`,
-          25 * y_axis_distance_grid_lines + 8,
-          25 * x_axis_distance_grid_lines + grid_size * i + 3
-        );
-      }
-
-      for (i = 1; i < x_axis_distance_grid_lines; i++) {
-        canvasCTX.beginPath();
-        canvasCTX.lineWidth = 1;
-        canvasCTX.strokeStyle = "#000000";
-
-        canvasCTX.moveTo(
-          25 * y_axis_distance_grid_lines - 3,
-          -grid_size * i + 0.5
-        );
-        canvasCTX.lineTo(
-          25 * y_axis_distance_grid_lines + 3,
-          -grid_size * i + 0.5
-        );
-        canvasCTX.stroke();
-        canvasCTX.font = "10px Inter";
-        canvasCTX.textAlign = "start";
-        canvasCTX.fillText(
-          `${i}`,
-          25 * y_axis_distance_grid_lines + 8,
-          25 * x_axis_distance_grid_lines - grid_size * i + 3
-        );
-      }
-    }
-  };
   return (
     <div className={style.app}>
       <div className={style.leftPanel}>

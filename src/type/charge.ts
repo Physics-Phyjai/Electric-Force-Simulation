@@ -16,6 +16,10 @@ class Charge {
         this.color = color;
         this.force = force;
     }
+
+    setForce = (force: Force) => {
+        this.force = force;
+    }
 }
 
 export { Charge };
