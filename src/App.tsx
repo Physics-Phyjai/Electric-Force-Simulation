@@ -116,16 +116,22 @@ function App() {
   const handleMouseMove = (event: MouseEvent<HTMLCanvasElement>) => {
     if (isDragging) {
       setCurrentPosition({
-        x: currentPosition.x + (event.clientX - mousePosition.x),
-        y: currentPosition.y + (event.clientY - mousePosition.y),
+        x: currentPosition.x - (event.clientX - mousePosition.x),
+        y: currentPosition.y - (event.clientY - mousePosition.y),
       });
       setMousePosition({ x: event.clientX, y: event.clientY });
     } else if (dragChargeIndex != null) {
       const newChargeList = [...chargeList];
-      newChargeList[dragChargeIndex].x = 
-        (event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102;
-      newChargeList[dragChargeIndex].y = 101 - 
-        (event.clientY - canvasOffset.y + currentPosition.y) / 25;
+      newChargeList[dragChargeIndex].x =
+        Math.round(
+          ((event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102) *
+            100
+        ) / 100;
+      newChargeList[dragChargeIndex].y =
+        Math.round(
+          (101 - (event.clientY - canvasOffset.y + currentPosition.y) / 25) *
+            100
+        ) / 100;
       setChargeList(newChargeList);
     }
   };
@@ -152,16 +158,20 @@ function App() {
     if (isDragging) {
       setIsDragging(false);
       setCurrentPosition({
-        x: currentPosition.x + (event.clientX - mousePosition.x),
-        y: currentPosition.y + (event.clientY - mousePosition.y),
+        x: currentPosition.x - (event.clientX - mousePosition.x),
+        y: currentPosition.y - (event.clientY - mousePosition.y),
       });
       setMousePosition({ x: event.clientX, y: event.clientY });
     } else if (dragChargeIndex != null) {
       const newChargeList = [...chargeList];
-      newChargeList[dragChargeIndex].x = Math.round(
-        (event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102);
-      newChargeList[dragChargeIndex].y = Math.round(101 - 
-        (event.clientY - canvasOffset.y + currentPosition.y) / 25);
+      newChargeList[dragChargeIndex].x =
+        Math.round(
+          ((event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102) * 2
+        ) / 2;
+      newChargeList[dragChargeIndex].y =
+        Math.round(
+          (101 - (event.clientY - canvasOffset.y + currentPosition.y) / 25) * 2
+        ) / 2;
       setChargeList(newChargeList);
       setDragChargeIndex(null);
     }
