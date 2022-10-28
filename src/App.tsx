@@ -12,14 +12,15 @@ function App() {
   useLayoutEffect(() => {
     const updateSize = () => {
       setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener('resize', updateSize);
+    };
+    window.addEventListener("resize", updateSize);
     updateSize();
-    return () => window.removeEventListener('resize', updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
   const [chargeList, setChargeList] = useState<Array<Charge>>([]);
   const [chargeForceList, setChargeForceList] = useState<Array<Charge>>([]);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>();
+  const [dragChargeIndex, setDragChargeIndex] = useState<number | null>();
   const [mousePosition, setMousePosition] = useState<Position>({
     x: 0,
     y: 0,
@@ -46,12 +47,13 @@ function App() {
     ]);
     const canvas = initializeCanvas();
     const ctx = canvas.getContext("2d");
+    ctx?.translate(0.5, 0.5);
     setCanvasCTX(ctx);
   }, []);
 
   useEffect(() => {
     initializeCanvas();
-  }, [size])
+  }, [size]);
 
   useEffect(() => {
     setChargeForceList(findForce(chargeList));
@@ -95,7 +97,7 @@ function App() {
     }
   }, [chargeForceList, currentPosition.x, currentPosition.y]);
 
-  const initializeCanvas = () : HTMLCanvasElement => {
+  const initializeCanvas = (): HTMLCanvasElement => {
     const canvas: HTMLCanvasElement = document.getElementById(
       "canvas"
     ) as HTMLCanvasElement;
@@ -109,7 +111,7 @@ function App() {
       y: 2550 - canvas.height / 2,
     });
     return canvas;
-  }
+  };
 
   const handleMouseMove = (event: MouseEvent<HTMLCanvasElement>) => {
     if (isDragging) {
@@ -118,6 +120,13 @@ function App() {
         y: currentPosition.y + (event.clientY - mousePosition.y),
       });
       setMousePosition({ x: event.clientX, y: event.clientY });
+    } else if (dragChargeIndex != null) {
+      const newChargeList = [...chargeList];
+      newChargeList[dragChargeIndex].x = 
+        (event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102;
+      newChargeList[dragChargeIndex].y = 101 - 
+        (event.clientY - canvasOffset.y + currentPosition.y) / 25;
+      setChargeList(newChargeList);
     }
   };
 
@@ -128,22 +137,34 @@ function App() {
       x: event.clientX - canvasOffset.x,
       y: event.clientY - canvasOffset.y,
     };
-    chargeList.forEach((charge) => {
+    chargeList.forEach((charge, index) => {
       if (isOnCharge(position, currentPosition, charge)) {
         onCharge = true;
+        setDragChargeIndex(index);
       }
     });
-
-    setIsDragging(true);
+    if (!onCharge) {
+      setIsDragging(true);
+    }
   };
 
   const handleMouseUp = (event: MouseEvent<HTMLCanvasElement>) => {
-    setIsDragging(false);
-    setCurrentPosition({
-      x: currentPosition.x + (event.clientX - mousePosition.x),
-      y: currentPosition.y + (event.clientY - mousePosition.y),
-    });
-    setMousePosition({ x: event.clientX, y: event.clientY });
+    if (isDragging) {
+      setIsDragging(false);
+      setCurrentPosition({
+        x: currentPosition.x + (event.clientX - mousePosition.x),
+        y: currentPosition.y + (event.clientY - mousePosition.y),
+      });
+      setMousePosition({ x: event.clientX, y: event.clientY });
+    } else if (dragChargeIndex != null) {
+      const newChargeList = [...chargeList];
+      newChargeList[dragChargeIndex].x = Math.round(
+        (event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102);
+      newChargeList[dragChargeIndex].y = Math.round(101 - 
+        (event.clientY - canvasOffset.y + currentPosition.y) / 25);
+      setChargeList(newChargeList);
+      setDragChargeIndex(null);
+    }
   };
 
   const handleMouseOut = (event: MouseEvent<HTMLCanvasElement>) => {
@@ -168,12 +189,14 @@ function App() {
   return (
     <div className={style.app}>
       <div className={style.leftPanel}>
-        <div style={{maxHeight:'95vh', overflow:'scroll'}}>
-        {chargeList.map((charge) => (
-          <ChargeCard charge={charge} key={charge.name} />
-        ))}
+        <div style={{ maxHeight: "95vh", overflow: "scroll" }}>
+          {chargeList.map((charge) => (
+            <ChargeCard charge={charge} key={charge.name} />
+          ))}
         </div>
-        <div style={{ display: "flex", justifyContent: "flex-end", height:'5vh' }}>
+        <div
+          style={{ display: "flex", justifyContent: "flex-end", height: "5vh" }}
+        >
           <Button
             text="Add new charge"
             icon="plus"
