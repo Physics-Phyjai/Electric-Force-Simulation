@@ -17,7 +17,7 @@ const ChargeCard = (props: ChargeCardProps) => {
           <div>{charge.name}</div>
         </div>
         <div className={styles.chargeDetail}>
-          X: {toPointFive(charge.x)} Y: {toPointFive(charge.y)} Q: {charge.charge}μC
+          X: {toPointFive(charge.x)} cm Y: {toPointFive(charge.y)} cm Q: {charge.charge} μC
         </div>
       </div>
       <div>Edit</div>
