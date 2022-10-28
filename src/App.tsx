@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
 import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
+import { renderChargeInfo } from "./components/ChargeInfo";
 import { findForce } from "./functionality/force";
 import { drawCharge, drawGrid, isOnCharge } from "./functionality/graph";
 import style from "./style/App.module.css";
@@ -133,6 +134,31 @@ function App() {
             100
         ) / 100;
       setChargeList(newChargeList);
+    }
+    const position: Position = {
+      x: event.clientX - canvasOffset.x,
+      y: event.clientY - canvasOffset.y,
+    };
+    let onCharge = null;
+    chargeList.forEach((charge) => {
+      if (isOnCharge(position, currentPosition, charge)) {
+        onCharge = charge;
+      }
+    });
+    if (onCharge) {
+      const element = document.getElementById("chargeinfo-hover");
+      if (element) {
+        document.body.removeChild(element);
+      }
+      renderChargeInfo(onCharge, {
+        x: event.clientX + 25,
+        y: event.clientY + 25,
+      } as Position);
+    } else {
+      const element = document.getElementById("chargeinfo-hover");
+      if (element) {
+        document.body.removeChild(element);
+      }
     }
   };
 

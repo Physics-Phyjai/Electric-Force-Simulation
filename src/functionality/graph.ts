@@ -137,7 +137,9 @@ const drawCharge = (
   canvasCTX.beginPath();
   canvasCTX.moveTo(fromX, fromY);
   canvasCTX.lineTo(toX, toY);
-  canvasCTX.fillText(charge.force.getForce(),fromX + dx / 2 + Math.abs(15 * Math.sin(angle)), fromY + dy / 2 + Math.abs(15 * Math.cos(angle)));
+  if(charge.force.magnitude != 0) {
+    canvasCTX.fillText(charge.force.getForce(),fromX + dx / 2 + Math.abs(15 * Math.sin(angle)), fromY + dy / 2 + Math.abs(15 * Math.cos(angle)));
+  }
   canvasCTX.stroke();
   canvasCTX.closePath();
   canvasCTX.beginPath();
