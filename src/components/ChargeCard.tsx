@@ -1,5 +1,6 @@
 import { Charge } from "../type/charge";
 import styles from "../style/ChargeCard.module.css";
+import { toPointFive } from "../utils/convert";
 interface ChargeCardProps {
   charge: Charge;
 }
@@ -16,7 +17,7 @@ const ChargeCard = (props: ChargeCardProps) => {
           <div>{charge.name}</div>
         </div>
         <div className={styles.chargeDetail}>
-          X: {charge.x} Y: {charge.y} Q: {charge.charge}μC
+          X: {toPointFive(charge.x)} Y: {toPointFive(charge.y)} Q: {charge.charge}μC
         </div>
       </div>
       <div>Edit</div>

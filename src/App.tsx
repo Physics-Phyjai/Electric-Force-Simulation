@@ -8,6 +8,7 @@ import style from "./style/App.module.css";
 import { CanvasSize, Position } from "./type/canvas";
 import { Charge } from "./type/charge";
 import { Force } from "./type/force";
+import { to2Decimal, toPointFive } from "./utils/convert";
 function App() {
   const [size, setSize] = useState([0, 0]);
   useLayoutEffect(() => {
@@ -123,16 +124,18 @@ function App() {
       setMousePosition({ x: event.clientX, y: event.clientY });
     } else if (dragChargeIndex != null) {
       const newChargeList = [...chargeList];
-      newChargeList[dragChargeIndex].x =
-        Math.round(
-          ((event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102) *
-            100
-        ) / 100;
-      newChargeList[dragChargeIndex].y =
-        Math.round(
-          (101 - (event.clientY - canvasOffset.y + currentPosition.y) / 25) *
-            100
-        ) / 100;
+      const xPosition = to2Decimal(
+        (event.clientX - canvasOffset.x) / 25 +
+          Math.floor(currentPosition.x / 25) -
+          101
+      );
+      const yPosition = to2Decimal(
+        101 -
+          (event.clientY - canvasOffset.y) / 25 -
+          Math.floor(currentPosition.y / 25)
+      );
+      newChargeList[dragChargeIndex].x = xPosition;
+      newChargeList[dragChargeIndex].y = yPosition;
       setChargeList(newChargeList);
     }
     const position: Position = {
@@ -189,15 +192,11 @@ function App() {
       });
       setMousePosition({ x: event.clientX, y: event.clientY });
     } else if (dragChargeIndex != null) {
+      const xPosition = toPointFive(chargeList[dragChargeIndex].x);
+      const yPosition = toPointFive(chargeList[dragChargeIndex].y);
       const newChargeList = [...chargeList];
-      newChargeList[dragChargeIndex].x =
-        Math.round(
-          ((event.clientX - canvasOffset.x + currentPosition.x) / 25 - 102) * 2
-        ) / 2;
-      newChargeList[dragChargeIndex].y =
-        Math.round(
-          (101 - (event.clientY - canvasOffset.y + currentPosition.y) / 25) * 2
-        ) / 2;
+      newChargeList[dragChargeIndex].x = xPosition;
+      newChargeList[dragChargeIndex].y = yPosition;
       setChargeList(newChargeList);
       setDragChargeIndex(null);
     }
@@ -211,6 +210,19 @@ function App() {
         y: currentPosition.y + (event.clientY - mousePosition.y),
       });
     }
+  };
+
+  const handleDoubleClick = (event: MouseEvent<HTMLCanvasElement>) => {
+    const position: Position = {
+      x: event.clientX - canvasOffset.x,
+      y: event.clientY - canvasOffset.y,
+    };
+    chargeList.forEach((charge) => {
+      if (isOnCharge(position, currentPosition, charge)) {
+        alert("Will edit " + charge.name);
+        return;
+      }
+    });
   };
 
   const getRandomColor = () => {
@@ -257,6 +269,7 @@ function App() {
           onMouseUp={handleMouseUp}
           onMouseDown={handleMouseDown}
           onMouseOut={handleMouseOut}
+          onDoubleClick={handleDoubleClick}
         ></canvas>
       </div>
       <div

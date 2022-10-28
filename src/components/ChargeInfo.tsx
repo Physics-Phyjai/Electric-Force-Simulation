@@ -1,5 +1,6 @@
 import { Position } from "../type/canvas"
 import { Charge } from "../type/charge"
+import { toPointFive } from "../utils/convert"
 
 const renderChargeInfo = (charge: Charge, position: Position) => {
     const divElement = document.createElement("div")
@@ -19,7 +20,7 @@ const renderChargeInfo = (charge: Charge, position: Position) => {
             <div style="font-weight: 600">${charge.name}</div>
         </div>
         <div style="padding-top: .25rem">
-        X: ${charge.x} Y: ${charge.y} Q: ${charge.charge}μC
+        X: ${toPointFive(charge.x)} Y: ${Math.round(charge.y * 2) / 2} Q: ${charge.charge}μC
         </div>
     `
     document.body.appendChild(divElement)
