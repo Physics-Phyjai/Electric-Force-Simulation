@@ -1,4 +1,6 @@
 import { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
+import Modal from 'react-modal';
+import AddEditChargeModal from "./components/AddEditChargeModal";
 import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
 import { renderChargeInfo } from "./components/ChargeInfo";
@@ -11,6 +13,7 @@ import { Force } from "./type/force";
 import { to2Decimal, toPointFive } from "./utils/convert";
 function App() {
   const [size, setSize] = useState([0, 0]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useLayoutEffect(() => {
     const updateSize = () => {
       setSize([window.innerWidth, window.innerHeight]);
@@ -126,13 +129,13 @@ function App() {
       const newChargeList = [...chargeList];
       const xPosition = to2Decimal(
         (event.clientX - canvasOffset.x) / 25 +
-          Math.floor(currentPosition.x / 25) -
-          101
+        Math.floor(currentPosition.x / 25) -
+        101
       );
       const yPosition = to2Decimal(
         101 -
-          (event.clientY - canvasOffset.y) / 25 -
-          Math.floor(currentPosition.y / 25)
+        (event.clientY - canvasOffset.y) / 25 -
+        Math.floor(currentPosition.y / 25)
       );
       newChargeList[dragChargeIndex].x = xPosition;
       newChargeList[dragChargeIndex].y = yPosition;
@@ -234,6 +237,8 @@ function App() {
     return color;
   };
 
+  const initCharge = new Charge('', 0, 0, 0, '', new Force(0, 0, 0));
+
   return (
     <div className={style.app}>
       <div className={style.leftPanel}>
@@ -249,15 +254,16 @@ function App() {
             text="Add new charge"
             icon="plus"
             onClick={() => {
-              const newCharge = new Charge(
-                "Charge " + (chargeList.length + 1),
-                Math.floor(Math.random() * 3) + 1,
-                Math.floor(Math.random() * 10 - 5),
-                Math.floor(Math.random() * 10 - 5),
-                getRandomColor(),
-                new Force(0, 0, 0)
-              );
-              setChargeList([...chargeList, newCharge]);
+              setIsModalOpen(true);
+              // const newCharge = new Charge(
+              //   "Charge " + (chargeList.length + 1),
+              //   Math.floor(Math.random() * 3) + 1,
+              //   Math.floor(Math.random() * 10 - 5),
+              //   Math.floor(Math.random() * 10 - 5),
+              //   getRandomColor(),
+              //   new Force(0, 0, 0)
+              // );
+              // setChargeList([...chargeList, newCharge]);
             }}
           />
         </div>
@@ -296,6 +302,12 @@ function App() {
       >
         ⭕️
       </div>
+      <AddEditChargeModal
+        isModalOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        charge={initCharge}
+        chargeListLength={chargeList.length}
+      />
     </div>
   );
 }
