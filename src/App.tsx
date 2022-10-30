@@ -17,7 +17,7 @@ function App() {
   const initCharge = new Charge('', 0, 0, 0, '', new Force(0, 0, 0));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(Mode.Add);
-  const [currentCharge, setCurrentCharge] = useState<Charge>(initCharge);
+  const [currentChargeIndex, setCurrentChargeIndex] = useState<number>(-1);
 
   useLayoutEffect(() => {
     const updateSize = () => {
@@ -225,12 +225,11 @@ function App() {
       x: event.clientX - canvasOffset.x,
       y: event.clientY - canvasOffset.y,
     };
-    chargeList.forEach((charge) => {
+    chargeList.forEach((charge, index) => {
       if (isOnCharge(position, currentPosition, charge)) {
         setMode(Mode.Edit)
-        setCurrentCharge(charge);
+        setCurrentChargeIndex(index);
         setIsModalOpen(true);
-        // alert("Will edit " + charge.name);
         return;
       }
     });
@@ -304,7 +303,7 @@ function App() {
       <ChargeModal
         isModalOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
-        charge={currentCharge}
+        charge={currentChargeIndex === -1 ? initCharge : chargeList[currentChargeIndex]}
         chargeListLength={chargeList.length}
         mode={mode}
         onConfirm={(charge) => {
