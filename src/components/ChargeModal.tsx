@@ -116,15 +116,18 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
             onClick={() => {
               const { name, x, y, color } = charge;
               const newCharge = new Charge(name, charge.charge, x, y, color, new Force(0, 0, 0));
-              props.onConfirm(newCharge)
+              props.onConfirm(newCharge);
+              props.closeModal();
             }}
           />
         </div>
       </div>
 
-
       <div>
-        <SketchPicker />
+        <SketchPicker
+          color={charge.color}
+          onChange={(color) => { charge.color = color.hex; setCharge({ ...charge }) }}
+        />
       </div>
     </ReactModal>
   )

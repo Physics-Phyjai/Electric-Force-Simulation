@@ -309,9 +309,11 @@ function App() {
         onConfirm={(newCharge) => {
           switch (mode) {
             case Mode.Add:
-              console.log('in add new charge')
               setChargeList([...chargeList, newCharge])
               break;
+            case Mode.Edit:
+              chargeList[currentChargeIndex] = newCharge;
+              setChargeList([...chargeList]);
           }
         }}
       />
