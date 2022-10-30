@@ -24,3 +24,6 @@
     border-radius: 10px;
     margin-right: .5rem;
 }
+.edit:hover{
+cursor: pointer;
+}

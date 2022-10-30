@@ -3,6 +3,7 @@ import styles from "../style/ChargeCard.module.css";
 import { toPointFive } from "../utils/convert";
 interface ChargeCardProps {
   charge: Charge;
+  onClickEdit: () => void;
 }
 const ChargeCard = (props: ChargeCardProps) => {
   const { charge } = props;
@@ -20,7 +21,7 @@ const ChargeCard = (props: ChargeCardProps) => {
           X: {toPointFive(charge.x)} cm Y: {toPointFive(charge.y)} cm Q: {charge.charge} μC
         </div>
       </div>
-      <div>Edit</div>
+      <div className={styles.edit} onClick={props.onClickEdit}>Edit</div>
     </div>
   );
 };

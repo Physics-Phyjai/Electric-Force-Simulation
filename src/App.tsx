@@ -250,8 +250,15 @@ function App() {
     <div className={style.app}>
       <div className={style.leftPanel}>
         <div style={{ maxHeight: "95vh", overflow: "scroll" }}>
-          {chargeList.map((charge) => (
-            <ChargeCard charge={charge} key={charge.name} />
+          {chargeList.map((charge, index) => (
+            <ChargeCard
+              charge={charge}
+              key={charge.name} onClickEdit={() => {
+                setIsModalOpen(true);
+                setCurrentChargeIndex(index);
+                setMode(Mode.Edit);
+              }}
+            />
           ))}
         </div>
         <div
