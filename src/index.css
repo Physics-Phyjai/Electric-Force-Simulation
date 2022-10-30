@@ -1,4 +1,15 @@
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
+}
+
+*:focus {
+  outline: none;
+}
+
+.bold {
+  font-weight: bold;
 }

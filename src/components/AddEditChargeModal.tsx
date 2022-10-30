@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 import { Charge } from '../type/charge';
-import Slider from '@mui/material/Slider';
+import InputText from './InputText';
+import SliderInput from './SliderInput';
 
 export enum Mode {
 
@@ -21,7 +22,6 @@ interface NewCharge {
   color: string;
 }
 
-
 const modalStyle = {
   content: {
     top: '50%',
@@ -33,29 +33,6 @@ const modalStyle = {
   },
 };
 
-const marks = [
-  {
-    value: -20,
-    label: '-20',
-  },
-  {
-    value: -10,
-    label: '-10',
-  },
-  {
-    value: 0,
-    label: '0',
-  },
-  {
-    value: 10,
-    label: '10',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-];
-
 const AddEditChargeModal: React.FC<AddNewChargeModalProps> = (props) => {
   const [charge, setCharge] = useState<NewCharge>(
     {
@@ -65,24 +42,46 @@ const AddEditChargeModal: React.FC<AddNewChargeModalProps> = (props) => {
       color: props.charge.color
     }
   )
+
   return (
     <ReactModal
       isOpen={props.isModalOpen}
       onRequestClose={props.closeModal}
       style={modalStyle}
     >
-      <div style={{ width: '300px' }}>
-        <Slider
-          track="inverted"
-          aria-labelledby="track-inverted-slider"
-          getAriaValueText={(value) => (value - 50) + ""}
-          step={1}
-          min={-20}
-          max={20}
-          defaultValue={10}
-          marks={marks}
-          valueLabelDisplay="on"
-        />
+      <div style={{ width: '500px' }}>
+        <div style={{ width: '250px' }}>
+          <p className='bold'>Charge name</p>
+          <InputText
+            value={charge.name}
+            placeholder={'Charge name'}
+            setValue={(value) => {
+              charge.name = value;
+              setCharge({ ...charge })
+            }}
+          />
+        </div>
+        <div>
+          <p className='bold'>X-value</p>
+          <SliderInput
+            value={charge.x}
+            setValue={(x) => {
+              charge.x = x;
+              setCharge({ ...charge })
+            }}
+          />
+        </div>
+        <div>
+          <p className='bold'>Y-value</p>
+          <SliderInput
+            value={charge.y}
+            setValue={(y) => {
+              charge.y = y;
+              setCharge({ ...charge })
+            }}
+          />
+        </div>
+
       </div>
     </ReactModal>
   )
