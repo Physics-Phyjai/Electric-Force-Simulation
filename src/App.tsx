@@ -261,6 +261,7 @@ function App() {
             text="Add new charge"
             icon="plus"
             onClick={() => {
+              setCurrentChargeIndex(-1);
               setMode(Mode.Add);
               setIsModalOpen(true);
             }}
