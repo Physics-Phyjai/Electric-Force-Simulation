@@ -1,6 +1,5 @@
 import { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
-import Modal from 'react-modal';
-import AddEditChargeModal from "./components/AddEditChargeModal";
+import ChargeModal, { Mode } from "./components/ChargeModal";
 import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
 import { renderChargeInfo } from "./components/ChargeInfo";
@@ -11,9 +10,15 @@ import { CanvasSize, Position } from "./type/canvas";
 import { Charge } from "./type/charge";
 import { Force } from "./type/force";
 import { to2Decimal, toPointFive } from "./utils/convert";
+
 function App() {
   const [size, setSize] = useState([0, 0]);
+
+  const initCharge = new Charge('', 0, 0, 0, '', new Force(0, 0, 0));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mode, setMode] = useState<Mode>(Mode.Add);
+  const [currentCharge, setCurrentCharge] = useState<Charge>(initCharge);
+
   useLayoutEffect(() => {
     const updateSize = () => {
       setSize([window.innerWidth, window.innerHeight]);
@@ -222,7 +227,10 @@ function App() {
     };
     chargeList.forEach((charge) => {
       if (isOnCharge(position, currentPosition, charge)) {
-        alert("Will edit " + charge.name);
+        setMode(Mode.Edit)
+        setCurrentCharge(charge);
+        setIsModalOpen(true);
+        // alert("Will edit " + charge.name);
         return;
       }
     });
@@ -237,7 +245,7 @@ function App() {
     return color;
   };
 
-  const initCharge = new Charge('', 0, 0, 0, '', new Force(0, 0, 0));
+
 
   return (
     <div className={style.app}>
@@ -255,15 +263,6 @@ function App() {
             icon="plus"
             onClick={() => {
               setIsModalOpen(true);
-              // const newCharge = new Charge(
-              //   "Charge " + (chargeList.length + 1),
-              //   Math.floor(Math.random() * 3) + 1,
-              //   Math.floor(Math.random() * 10 - 5),
-              //   Math.floor(Math.random() * 10 - 5),
-              //   getRandomColor(),
-              //   new Force(0, 0, 0)
-              // );
-              // setChargeList([...chargeList, newCharge]);
             }}
           />
         </div>
@@ -302,11 +301,15 @@ function App() {
       >
         ⭕️
       </div>
-      <AddEditChargeModal
+      <ChargeModal
         isModalOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
-        charge={initCharge}
+        charge={currentCharge}
         chargeListLength={chargeList.length}
+        mode={mode}
+        onConfirm={(charge) => {
+          console.log(charge)
+        }}
       />
     </div>
   );

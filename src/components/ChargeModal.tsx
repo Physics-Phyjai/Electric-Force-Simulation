@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from 'react';
+import { SketchPicker } from 'react-color';
 import ReactModal from 'react-modal';
 import { Charge } from '../type/charge';
 import InputText from './InputText';
 import SliderInput from './SliderInput';
+import Button from './Button';
 
 export enum Mode {
-
+  Add, Edit
 }
 
-interface AddNewChargeModalProps {
+interface ChargeModalProps {
   charge: Charge;
   isModalOpen: boolean;
   chargeListLength: number;
-  closeModal: () => void
+  mode: Mode;
+  closeModal: () => void;
+  onConfirm: (charge: NewCharge) => void;
 }
 
-interface NewCharge {
+export interface NewCharge {
   name: string;
-  y: number;
   x: number;
+  y: number;
+  charge: number;
   color: string;
 }
 
@@ -30,18 +35,25 @@ const modalStyle = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
+    display: 'flex',
+    gap: '50px'
   },
 };
 
-const AddEditChargeModal: React.FC<AddNewChargeModalProps> = (props) => {
+const ChargeModal: React.FC<ChargeModalProps> = (props) => {
   const [charge, setCharge] = useState<NewCharge>(
     {
       name: props.charge.name,
       y: props.charge.y,
       x: props.charge.x,
-      color: props.charge.color
+      color: props.charge.color,
+      charge: props.charge.charge
     }
   )
+
+  useEffect(() => {
+    setCharge(props.charge)
+  }, [props.charge])
 
   return (
     <ReactModal
@@ -49,8 +61,9 @@ const AddEditChargeModal: React.FC<AddNewChargeModalProps> = (props) => {
       onRequestClose={props.closeModal}
       style={modalStyle}
     >
-      <div style={{ width: '500px' }}>
-        <div style={{ width: '250px' }}>
+
+      <div style={{ width: '400px' }}>
+        <div style={{ width: '205px' }}>
           <p className='bold'>Charge name</p>
           <InputText
             value={charge.name}
@@ -62,7 +75,7 @@ const AddEditChargeModal: React.FC<AddNewChargeModalProps> = (props) => {
           />
         </div>
         <div>
-          <p className='bold'>X-value</p>
+          <p className='bold'>X-value (cm)</p>
           <SliderInput
             value={charge.x}
             setValue={(x) => {
@@ -72,7 +85,7 @@ const AddEditChargeModal: React.FC<AddNewChargeModalProps> = (props) => {
           />
         </div>
         <div>
-          <p className='bold'>Y-value</p>
+          <p className='bold'>Y-value (cm)</p>
           <SliderInput
             value={charge.y}
             setValue={(y) => {
@@ -82,9 +95,36 @@ const AddEditChargeModal: React.FC<AddNewChargeModalProps> = (props) => {
           />
         </div>
 
+        <div>
+          <p className='bold'>Q value (μC) </p>
+          <SliderInput
+            value={charge.charge}
+            setValue={(newCharge) => {
+              charge.charge = newCharge;
+              setCharge({ ...charge })
+            }}
+          />
+        </div>
+
+        <div
+          style={{ display: "flex", justifyContent: "flex-end", height: "5vh" }}
+        >
+          <Button
+            text={props.mode === Mode.Add ? "Add new charge" : "Save"}
+            icon={props.mode === Mode.Add ? "plus" : ''}
+            onClick={() => {
+              props.onConfirm(charge)
+            }}
+          />
+        </div>
+      </div>
+
+
+      <div>
+        <SketchPicker />
       </div>
     </ReactModal>
   )
 }
 
-export default AddEditChargeModal;
+export default ChargeModal;
