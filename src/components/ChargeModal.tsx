@@ -5,6 +5,7 @@ import { Charge } from '../type/charge';
 import InputText from './InputText';
 import SliderInput from './SliderInput';
 import Button from './Button';
+import { Force } from '../type/force';
 
 export enum Mode {
   Add, Edit
@@ -16,7 +17,7 @@ interface ChargeModalProps {
   chargeListLength: number;
   mode: Mode;
   closeModal: () => void;
-  onConfirm: (charge: NewCharge) => void;
+  onConfirm: (charge: Charge) => void;
 }
 
 export interface NewCharge {
@@ -113,7 +114,9 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
             text={props.mode === Mode.Add ? "Add new charge" : "Save"}
             icon={props.mode === Mode.Add ? "plus" : ''}
             onClick={() => {
-              props.onConfirm(charge)
+              const { name, x, y, color } = charge;
+              const newCharge = new Charge(name, charge.charge, x, y, color, new Force(0, 0, 0));
+              props.onConfirm(newCharge)
             }}
           />
         </div>

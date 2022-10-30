@@ -14,7 +14,7 @@ import { to2Decimal, toPointFive } from "./utils/convert";
 function App() {
   const [size, setSize] = useState([0, 0]);
 
-  const initCharge = new Charge('', 0, 0, 0, '', new Force(0, 0, 0));
+  const initCharge = new Charge('', 0, 0, 0, '#FF0000', new Force(0, 0, 0));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(Mode.Add);
   const [currentChargeIndex, setCurrentChargeIndex] = useState<number>(-1);
@@ -306,8 +306,13 @@ function App() {
         charge={currentChargeIndex === -1 ? initCharge : chargeList[currentChargeIndex]}
         chargeListLength={chargeList.length}
         mode={mode}
-        onConfirm={(charge) => {
-          console.log(charge)
+        onConfirm={(newCharge) => {
+          switch (mode) {
+            case Mode.Add:
+              console.log('in add new charge')
+              setChargeList([...chargeList, newCharge])
+              break;
+          }
         }}
       />
     </div>
