@@ -52,6 +52,7 @@ const SliderInput: React.FC<SlideInputProps> = ({ value, setValue, min = -100, m
       defaultValue={0}
       marks={Array(11).fill(0).map((_, index) => ({ value: min + (index * (max - min) / 10), label: (min + (index * (max - min) / 10)).toString() }))}
       valueLabelDisplay="on"
+      size='small'
     />
   </ThemeProvider>
 }
