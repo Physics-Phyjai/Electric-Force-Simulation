@@ -52,14 +52,15 @@ const drawGrid = (
     canvasCTX.moveTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines - 3);
     canvasCTX.lineTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines + 3);
     canvasCTX.stroke();
-
-    canvasCTX.font = "10px Inter";
-    canvasCTX.textAlign = "start";
-    canvasCTX.fillText(
-      `${i}`,
-      25 * y_axis_distance_grid_lines + grid_size * i - 2,
-      25 * x_axis_distance_grid_lines + 15
-    );
+    if (i % 5 == 0) {
+      canvasCTX.font = "10px Inter";
+      canvasCTX.textAlign = "start";
+      canvasCTX.fillText(
+        `${i}`,
+        25 * y_axis_distance_grid_lines + grid_size * i - 2,
+        25 * x_axis_distance_grid_lines + 15
+      );
+    }
   }
   canvasCTX.fillText(
     `0`,
@@ -75,14 +76,15 @@ const drawGrid = (
     canvasCTX.moveTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines - 3);
     canvasCTX.lineTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines + 3);
     canvasCTX.stroke();
-
-    canvasCTX.font = "10px Inter";
-    canvasCTX.textAlign = "end";
-    canvasCTX.fillText(
-      `-${i}`,
-      25 * y_axis_distance_grid_lines + -grid_size * i + 3,
-      25 * x_axis_distance_grid_lines + 15
-    );
+    if (i % 5 == 0) {
+      canvasCTX.font = "10px Inter";
+      canvasCTX.textAlign = "end";
+      canvasCTX.fillText(
+        `-${i}`,
+        25 * y_axis_distance_grid_lines + -grid_size * i + 3,
+        25 * x_axis_distance_grid_lines + 15
+      );
+    }
   }
 
   for (i = 1; i < num_lines_x - x_axis_distance_grid_lines; i++) {
@@ -93,13 +95,15 @@ const drawGrid = (
     canvasCTX.moveTo(25 * y_axis_distance_grid_lines - 3, grid_size * i + 0.5);
     canvasCTX.lineTo(25 * y_axis_distance_grid_lines + 3, grid_size * i + 0.5);
     canvasCTX.stroke();
-    canvasCTX.font = "10px Inter";
-    canvasCTX.textAlign = "start";
-    canvasCTX.fillText(
-      `-${i}`,
-      25 * y_axis_distance_grid_lines + 8,
-      25 * x_axis_distance_grid_lines + grid_size * i + 3
-    );
+    if (i % 5 == 0) {
+      canvasCTX.font = "10px Inter";
+      canvasCTX.textAlign = "start";
+      canvasCTX.fillText(
+        `-${i}`,
+        25 * y_axis_distance_grid_lines + 8,
+        25 * x_axis_distance_grid_lines + grid_size * i + 3
+      );
+    }
   }
 
   for (i = 1; i < x_axis_distance_grid_lines; i++) {
@@ -110,13 +114,15 @@ const drawGrid = (
     canvasCTX.moveTo(25 * y_axis_distance_grid_lines - 3, -grid_size * i + 0.5);
     canvasCTX.lineTo(25 * y_axis_distance_grid_lines + 3, -grid_size * i + 0.5);
     canvasCTX.stroke();
-    canvasCTX.font = "10px Inter";
-    canvasCTX.textAlign = "start";
-    canvasCTX.fillText(
-      `${i}`,
-      25 * y_axis_distance_grid_lines + 8,
-      25 * x_axis_distance_grid_lines - grid_size * i + 3
-    );
+    if (i % 5 == 0) {
+      canvasCTX.font = "10px Inter";
+      canvasCTX.textAlign = "start";
+      canvasCTX.fillText(
+        `${i}`,
+        25 * y_axis_distance_grid_lines + 8,
+        25 * x_axis_distance_grid_lines - grid_size * i + 3
+      );
+    }
   }
 };
 
@@ -137,8 +143,12 @@ const drawCharge = (
   canvasCTX.beginPath();
   canvasCTX.moveTo(fromX, fromY);
   canvasCTX.lineTo(toX, toY);
-  if(charge.force.magnitude != 0) {
-    canvasCTX.fillText(charge.force.getForce(),fromX + dx / 2 + Math.abs(15 * Math.sin(angle)), fromY + dy / 2 + Math.abs(15 * Math.cos(angle)));
+  if (charge.force.magnitude != 0) {
+    canvasCTX.fillText(
+      charge.force.getForce(),
+      fromX + dx / 2 + Math.abs(15 * Math.sin(angle)),
+      fromY + dy / 2 + Math.abs(15 * Math.cos(angle))
+    );
   }
   canvasCTX.stroke();
   canvasCTX.closePath();
