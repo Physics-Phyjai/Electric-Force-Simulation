@@ -1,6 +1,10 @@
 import { Position } from "../type/canvas";
 import { Charge } from "../type/charge";
 
+const getChargeRadius = (charge: number) => {
+  return (5/6) * Math.abs(charge) + (5 - 5/6);
+}
+
 const drawGrid = (
   canvasCTX: CanvasRenderingContext2D,
   canvasSize: { width: number; height: number },
@@ -169,7 +173,7 @@ const drawCharge = (
   canvasCTX.stroke();
   canvasCTX.closePath();
   canvasCTX.beginPath();
-  canvasCTX.arc(fromX, fromY, charge.charge * 5, 0, 2 * Math.PI);
+  canvasCTX.arc(fromX, fromY, getChargeRadius(charge.charge), 0, 2 * Math.PI);
   canvasCTX.fill();
   canvasCTX.closePath();
   canvasCTX.strokeStyle = "#000000";
@@ -185,7 +189,7 @@ const isOnCharge = (
   const centerY = (101 - Math.floor(currentPosition.y / 25) - charge.y) * 25;
   const dx = position.x - centerX;
   const dy = position.y - centerY;
-  return Math.sqrt(dx * dx + dy * dy) < charge.charge * 5;
+  return Math.sqrt(dx * dx + dy * dy) < getChargeRadius(charge.charge);
 };
 
 export { drawGrid, drawCharge, isOnCharge };

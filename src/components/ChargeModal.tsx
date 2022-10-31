@@ -104,6 +104,8 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
               charge.charge = newCharge;
               setCharge({ ...charge })
             }}
+            min={-10}
+            max={10}
           />
         </div>
 

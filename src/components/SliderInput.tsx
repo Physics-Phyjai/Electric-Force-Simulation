@@ -1,17 +1,14 @@
 import { Slider } from '@mui/material';
-import React, { useState } from 'react';
-
-const marks: Array<{ value: number, label: string }> = [];
-for (let i = -100; i <= 100; i += 20) {
-  marks.push({ value: i, label: i.toString() })
-}
+import React from 'react';
 
 interface SlideInputProps {
   value: number;
   setValue: (value: number) => void
+  min?: number;
+  max?: number;
 }
 
-const SliderInput: React.FC<SlideInputProps> = ({ value, setValue }) => {
+const SliderInput: React.FC<SlideInputProps> = ({ value, setValue, min = -100, max = 100 }) => {
   const onChange = (e: Event, value: number | number[], activeThumb: number): void => {
     if (typeof value === 'number') {
       setValue(value);
@@ -23,10 +20,10 @@ const SliderInput: React.FC<SlideInputProps> = ({ value, setValue }) => {
     track={false}
     aria-labelledby="track-inverted-slider"
     step={1}
-    min={-100}
-    max={100}
+    min={min}
+    max={max}
     defaultValue={0}
-    marks={marks}
+    marks={Array(11).fill(0).map((_, index) => ({ value: min + (index * (max-min) / 10), label: (min + (index * (max-min) / 10)).toString() }))}
     valueLabelDisplay="on"
   />
 }
