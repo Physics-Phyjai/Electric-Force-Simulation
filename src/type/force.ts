@@ -35,7 +35,7 @@ class Force {
 
   getForce = (): string => {
     const force = this.magnitude * (this.i ** 2 + this.j ** 2);
-    return `${force.toFixed(2)} N`;
+    return `${Math.abs(force).toFixed(2)} N`;
   }
 }
 

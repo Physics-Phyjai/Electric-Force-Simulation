@@ -175,7 +175,7 @@ const drawCharge = (
     if(width + 50 > Math.sqrt(dx ** 2 + dy ** 2)) {
       textY = fromY + dy / 2 + 20
     }
-    canvasCTX.fillStyle = "#fffa";
+    canvasCTX.fillStyle = "#fffd";
     canvasCTX.fillRect(textX, textY - 14, width + 8, 20);
     canvasCTX.fillStyle = charge.color;
     canvasCTX.fillText(
