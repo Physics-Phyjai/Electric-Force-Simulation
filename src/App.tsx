@@ -308,7 +308,7 @@ function App() {
           });
         }}
       >
-        ⭕️
+        <img src="images/focus.png" width="50px" height="auto"></img>
       </div>
       <ChargeModal
         isModalOpen={isModalOpen}

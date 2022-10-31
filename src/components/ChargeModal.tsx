@@ -7,6 +7,8 @@ import SliderInput from './SliderInput';
 import Button from './Button';
 import { Force } from '../type/force';
 
+import styles from '../style/ChargeModal.module.css';
+
 export enum Mode {
   Add, Edit
 }
@@ -37,8 +39,9 @@ const modalStyle = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
     display: 'flex',
-    gap: '50px'
-  },
+    gap: '50px',
+    padding: '30px'
+  }
 };
 
 const ChargeModal: React.FC<ChargeModalProps> = (props) => {
@@ -63,8 +66,9 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
       style={modalStyle}
     >
 
-      <div style={{ width: '400px' }}>
-        <div style={{ width: '205px' }}>
+      <div className={styles.container}>
+
+        <div className={styles.inputContainer} style={{ width: '205px' }}>
           <p className='bold'>Charge name</p>
           <InputText
             value={charge.name}
@@ -74,8 +78,9 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
               setCharge({ ...charge })
             }}
           />
+
         </div>
-        <div>
+        <div className={styles.inputContainer}>
           <p className='bold'>X-value (cm)</p>
           <SliderInput
             value={charge.x}
@@ -85,7 +90,7 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
             }}
           />
         </div>
-        <div>
+        <div className={styles.inputContainer}>
           <p className='bold'>Y-value (cm)</p>
           <SliderInput
             value={charge.y}
@@ -96,7 +101,7 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
           />
         </div>
 
-        <div>
+        <div className={styles.inputContainer}>
           <p className='bold'>Q value (μC) </p>
           <SliderInput
             value={charge.charge}
@@ -110,7 +115,7 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
         </div>
 
         <div
-          style={{ display: "flex", justifyContent: "flex-end", height: "5vh" }}
+          style={{ display: "flex", justifyContent: "flex-end" }}
         >
           <Button
             text={props.mode === Mode.Add ? "Add new charge" : "Save"}
