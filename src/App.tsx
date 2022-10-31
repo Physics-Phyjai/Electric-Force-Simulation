@@ -53,7 +53,8 @@ function App() {
 
   useEffect(() => {
     setChargeList([
-      new Charge("Charge 1", 2, 2, 0, "#FF0000", new Force(0, 0, 0)),
+      new Charge("Charge 1", 2, 2, 1, "#FF0000", new Force(0, 0, 0)),
+      new Charge("Charge 2", 2, -2, 1, "#FF0000", new Force(0, 0, 0)),
     ]);
     const canvas = initializeCanvas();
     const ctx = canvas.getContext("2d");

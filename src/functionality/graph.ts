@@ -142,37 +142,53 @@ const drawCharge = (
   const dx = toX - fromX;
   const dy = toY - fromY;
   const angle = Math.atan2(dy, dx);
-  canvasCTX.fillStyle = charge.color;
-  canvasCTX.strokeStyle = charge.color;
-  canvasCTX.beginPath();
-  canvasCTX.moveTo(fromX, fromY);
-  canvasCTX.lineTo(toX, toY);
   if (charge.force.magnitude != 0) {
-    canvasCTX.fillText(
-      charge.force.getForce(),
-      fromX + dx / 2 + Math.abs(15 * Math.sin(angle)),
-      fromY + dy / 2 + Math.abs(15 * Math.cos(angle))
+    canvasCTX.fillStyle = charge.color;
+    canvasCTX.strokeStyle = charge.color;
+    canvasCTX.lineWidth = 2;
+    canvasCTX.beginPath();
+    canvasCTX.moveTo(fromX, fromY);
+    canvasCTX.lineTo(toX, toY);
+    canvasCTX.stroke();
+    canvasCTX.closePath();
+    canvasCTX.beginPath();
+    canvasCTX.moveTo(toX, toY);
+    canvasCTX.lineTo(
+      toX - 5 * Math.cos(angle - Math.PI / 6),
+      toY - 5 * Math.sin(angle - Math.PI / 6)
     );
+    canvasCTX.stroke();
+    canvasCTX.closePath();
+    canvasCTX.beginPath();
+    canvasCTX.moveTo(toX, toY);
+    canvasCTX.lineTo(
+      toX - 5 * Math.cos(angle + Math.PI / 6),
+      toY - 5 * Math.sin(angle + Math.PI / 6)
+    );
+    canvasCTX.stroke();
+    canvasCTX.closePath();
+    canvasCTX.beginPath();
+    const text = charge.force.getForce()
+    const width = canvasCTX.measureText(text).width;
+    let textX = fromX + dx / 2 + Math.abs(15 * Math.sin(angle)) - 10 
+    let textY = fromY + dy / 2 + Math.abs(15 * Math.cos(angle)) - 10
+    if(width + 50 > Math.sqrt(dx ** 2 + dy ** 2)) {
+      textY = fromY + dy / 2 + 20
+    }
+    canvasCTX.fillStyle = "#fffa";
+    canvasCTX.fillRect(textX, textY - 14, width + 8, 20);
+    canvasCTX.fillStyle = charge.color;
+    canvasCTX.fillText(
+      text,
+      textX + 4,
+      textY
+    );
+    canvasCTX.closePath();
+    canvasCTX.lineWidth = 1;
   }
-  canvasCTX.stroke();
-  canvasCTX.closePath();
   canvasCTX.beginPath();
-  canvasCTX.moveTo(toX, toY);
-  canvasCTX.lineTo(
-    toX - 5 * Math.cos(angle - Math.PI / 6),
-    toY - 5 * Math.sin(angle - Math.PI / 6)
-  );
-  canvasCTX.stroke();
-  canvasCTX.closePath();
-  canvasCTX.beginPath();
-  canvasCTX.moveTo(toX, toY);
-  canvasCTX.lineTo(
-    toX - 5 * Math.cos(angle + Math.PI / 6),
-    toY - 5 * Math.sin(angle + Math.PI / 6)
-  );
-  canvasCTX.stroke();
-  canvasCTX.closePath();
-  canvasCTX.beginPath();
+  canvasCTX.fillStyle = charge.color + "AA";
+  canvasCTX.strokeStyle = charge.color;
   canvasCTX.arc(fromX, fromY, getChargeRadius(charge.charge), 0, 2 * Math.PI);
   canvasCTX.fill();
   canvasCTX.closePath();
