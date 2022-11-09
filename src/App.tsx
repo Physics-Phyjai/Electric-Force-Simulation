@@ -14,7 +14,7 @@ import { to2Decimal, toPointFive } from "./utils/convert";
 function App() {
   const [size, setSize] = useState([0, 0]);
 
-  const initCharge = new Charge('', 0, 0, 0, '#FF0000', new Force(0, 0, 0));
+  const initCharge = new Charge('', 0, 0, 0, '#858DE8', new Force(0, 0, 0));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(Mode.Add);
   const [currentChargeIndex, setCurrentChargeIndex] = useState<number>(-1);
@@ -53,8 +53,8 @@ function App() {
 
   useEffect(() => {
     setChargeList([
-      new Charge("Charge 1", 2, 2, 1, "#FF0000", new Force(0, 0, 0)),
-      new Charge("Charge 2", 2, -2, 1, "#FF0000", new Force(0, 0, 0)),
+      new Charge("Charge 1", 2, 2, 1, "#FF6961", new Force(0, 0, 0)),
+      new Charge("Charge 2", 2, -2, 1, "#AFD5F0", new Force(0, 0, 0)),
     ]);
     const canvas = initializeCanvas();
     const ctx = canvas.getContext("2d");
@@ -292,11 +292,11 @@ function App() {
           right: 25,
           bottom: 25,
           cursor: "pointer",
-          background: "#ccc",
+          background: "#858DE8",
           borderRadius: "50%",
-          padding: 10,
-          width: "25px",
-          height: "25px",
+          padding: '12px',
+          width: "48px",
+          height: "48px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -308,7 +308,7 @@ function App() {
           });
         }}
       >
-        <img src="images/focus.png" width="50px" height="auto"></img>
+        <img src="images/focus.svg" width="24px" height="24px"></img>
       </div>
       <ChargeModal
         isModalOpen={isModalOpen}
