@@ -10,11 +10,21 @@ import { CanvasSize, Position } from "./type/canvas";
 import { Charge } from "./type/charge";
 import { Force } from "./type/force";
 import { to2Decimal, toPointFive } from "./utils/convert";
+import { randomChargeValue, randomPastelColor, randomPosition } from "./utils/random";
 
 function App() {
   const [size, setSize] = useState([0, 0]);
 
-  const initCharge = new Charge("", 0, 0, 0, "#858DE8", new Force(0, 0, 0));
+  const initCharge = () => {
+    return new Charge(
+      "Charge " + (chargeList.length + 1),
+      randomChargeValue(),
+      randomPosition(),
+      randomPosition(),
+      randomPastelColor(),
+      new Force(0, 0, 0)
+    );
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(Mode.Add);
   const [currentChargeIndex, setCurrentChargeIndex] = useState<number>(-1);
@@ -314,7 +324,7 @@ function App() {
         closeModal={() => setIsModalOpen(false)}
         charge={
           currentChargeIndex === -1
-            ? initCharge
+            ? initCharge()
             : chargeList[currentChargeIndex]
         }
         chargeListLength={chargeList.length}

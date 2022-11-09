@@ -42,12 +42,12 @@ const modalStyle = {
     display: "flex",
     gap: "36px",
     padding: "24px",
-    border: 'none',
-    borderRadius: '16px'
+    border: "none",
+    borderRadius: "16px",
   },
   overlay: {
-    background: 'rgba(33, 33, 33, 0.5)'
-  }
+    background: "rgba(33, 33, 33, 0.5)",
+  },
 };
 
 const ChargeModal: React.FC<ChargeModalProps> = (props) => {
@@ -69,6 +69,33 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
       onRequestClose={props.closeModal}
       style={modalStyle}
     >
+      <div style={{ width: "264px" }}>
+        <SketchPicker
+          presetColors={[
+            "#B28DFF",
+            "#C5A3FF",
+            "#FF9CEE",
+            "#F6A6FF",
+            "#FFB5E8",
+            "#FFC9DE",
+            "#FFABAB",
+            "#6EB5FF",
+            "#85E3FF",
+            "#ACE7FF",
+            "#C4FAF8",
+            "#DBFFD6",
+            "#AFF8DB",
+            "#BFFCC6",
+            "#FFFFD1",
+            "#FFF58A",
+          ]}
+          color={charge.color}
+          onChange={(color) => {
+            charge.color = color.hex;
+            setCharge({ ...charge });
+          }}
+        />
+      </div>
       <div className={styles.container}>
         <div className={styles.inputContainer} style={{ width: "205px" }}>
           <p className="bold">Charge name</p>
@@ -134,16 +161,6 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
             }}
           />
         </div>
-      </div>
-
-      <div>
-        <SketchPicker
-          color={charge.color}
-          onChange={(color) => {
-            charge.color = color.hex;
-            setCharge({ ...charge });
-          }}
-        />
       </div>
     </ReactModal>
   );
