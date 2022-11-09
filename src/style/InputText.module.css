@@ -1,9 +1,13 @@
 .inputText {
-  background: #FFFFFF;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 16px;
-  border-radius: 5px;
+  background: rgba(242, 243, 247, 0.9);
+  border-radius: 10px;
   border: none;
   height: 27px;
-  padding-left: 10px;
+  padding: 18px;
   width: 100%;
+  color: #333333;
+}
+
+.inputText::placeholder {
+  color: rgba(157, 152, 157, 0.75);
 }

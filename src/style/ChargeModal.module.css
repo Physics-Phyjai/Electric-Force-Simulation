@@ -2,12 +2,12 @@
   width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 30px; 
+  gap: 12px; 
 }
 
 .container .inputContainer {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   color: #858DE8;
 }

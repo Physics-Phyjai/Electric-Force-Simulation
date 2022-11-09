@@ -128,8 +128,8 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
         />
       </div>
       <div className={styles.container}>
-        <div className={styles.inputContainer} style={{ width: "205px" }}>
-          <p className="bold">Charge name</p>
+        <div className={styles.inputContainer}>
+          <p className="bold">Charge Name</p>
           <InputText
             value={charge.name}
             placeholder={"Charge name"}
