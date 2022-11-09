@@ -2,8 +2,8 @@ import { Position } from "../type/canvas";
 import { Charge } from "../type/charge";
 
 const getChargeRadius = (charge: number) => {
-  return (5/6) * Math.abs(charge) + (5 - 5/6);
-}
+  return (5 / 6) * Math.abs(charge) + (5 - 5 / 6);
+};
 
 const drawGrid = (
   canvasCTX: CanvasRenderingContext2D,
@@ -145,7 +145,7 @@ const drawCharge = (
   if (charge.force.magnitude != 0) {
     canvasCTX.fillStyle = charge.color;
     canvasCTX.strokeStyle = charge.color;
-    canvasCTX.lineWidth = 2;
+    canvasCTX.lineWidth = 4;
     canvasCTX.beginPath();
     canvasCTX.moveTo(fromX, fromY);
     canvasCTX.lineTo(toX, toY);
@@ -154,35 +154,33 @@ const drawCharge = (
     canvasCTX.beginPath();
     canvasCTX.moveTo(toX, toY);
     canvasCTX.lineTo(
-      toX - 5 * Math.cos(angle - Math.PI / 6),
-      toY - 5 * Math.sin(angle - Math.PI / 6)
+      toX - 10 * Math.cos(angle - Math.PI / 7),
+      toY - 10 * Math.sin(angle - Math.PI / 7)
     );
-    canvasCTX.stroke();
-    canvasCTX.closePath();
-    canvasCTX.beginPath();
-    canvasCTX.moveTo(toX, toY);
     canvasCTX.lineTo(
-      toX - 5 * Math.cos(angle + Math.PI / 6),
-      toY - 5 * Math.sin(angle + Math.PI / 6)
+      toX - 10 * Math.cos(angle + Math.PI / 7),
+      toY - 10 * Math.sin(angle + Math.PI / 7)
     );
+    canvasCTX.lineTo(toX, toY);
+    canvasCTX.lineTo(
+      toX - 10 * Math.cos(angle - Math.PI / 7),
+      toY - 10 * Math.sin(angle - Math.PI / 7)
+    );
+
     canvasCTX.stroke();
     canvasCTX.closePath();
     canvasCTX.beginPath();
-    const text = charge.force.getForce()
+    const text = charge.force.getForce();
     const width = canvasCTX.measureText(text).width;
-    let textX = fromX + dx / 2 + Math.abs(15 * Math.sin(angle)) - 10 
-    let textY = fromY + dy / 2 + Math.abs(15 * Math.cos(angle)) - 10
-    if(width + 50 > Math.sqrt(dx ** 2 + dy ** 2)) {
-      textY = fromY + dy / 2 + 20
+    let textX = fromX + dx / 2 + Math.abs(15 * Math.sin(angle)) - 10;
+    let textY = fromY + dy / 2 + Math.abs(15 * Math.cos(angle)) - 10;
+    if (width + 50 > Math.sqrt(dx ** 2 + dy ** 2)) {
+      textY = fromY + dy / 2 + 20;
     }
     canvasCTX.fillStyle = "#fffd";
     canvasCTX.fillRect(textX, textY - 14, width + 8, 20);
     canvasCTX.fillStyle = charge.color;
-    canvasCTX.fillText(
-      text,
-      textX + 4,
-      textY
-    );
+    canvasCTX.fillText(text, textX + 4, textY);
     canvasCTX.closePath();
     canvasCTX.lineWidth = 1;
   }
