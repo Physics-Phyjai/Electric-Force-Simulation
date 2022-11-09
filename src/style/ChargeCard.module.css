@@ -24,6 +24,18 @@
     border-radius: 10px;
     margin-right: .5rem;
 }
+.edit {
+    display: flex;
+    gap: 4px;
+}
+.edit svg {
+    width: 16px;
+    height: 16px;
+}
 .edit:hover{
     cursor: pointer;
+    color: #858DE8;
+}
+.edit:hover svg path{
+    fill: #858DE8;
 }
