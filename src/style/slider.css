@@ -1,0 +1,31 @@
+.MuiSlider-rail {
+  background: #edf2f6 !important;
+  border-radius: 50px !important;
+  height: 4px !important;
+  margin-left: -4px !important;
+  width: calc(100% + 8px) !important;
+}
+.MuiSlider-mark {
+  background: #cccccc !important;
+  height: 8px !important;
+  width: 2px !important;
+}
+
+.MuiSlider-markLabel {
+  color: #cccccc !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+}
+.custom-track {
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  transition: left 50ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    width 50ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: #858de8;
+  border-radius: 100px;
+}
+.MuiSlider-valueLabel {
+  background: #858de8 !important;
+  font-size: 12px !important;
+}

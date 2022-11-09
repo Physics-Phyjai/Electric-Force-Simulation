@@ -142,6 +142,7 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
         <div className={styles.inputContainer}>
           <p className="bold">X-value (cm)</p>
           <SliderInput
+            id="slider-x"
             value={charge.x}
             setValue={(x) => {
               charge.x = x;
@@ -152,6 +153,7 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
         <div className={styles.inputContainer}>
           <p className="bold">Y-value (cm)</p>
           <SliderInput
+            id="slider-y"
             value={charge.y}
             setValue={(y) => {
               charge.y = y;
@@ -163,6 +165,7 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
         <div className={styles.inputContainer}>
           <p className="bold">Q value (μC) </p>
           <SliderInput
+            id="slider-charge"
             value={charge.charge}
             setValue={(newCharge) => {
               charge.charge = newCharge;

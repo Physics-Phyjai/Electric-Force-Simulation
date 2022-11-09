@@ -1,5 +1,5 @@
 .container {
-  width: 400px;
+  width: 320px;
   display: flex;
   flex-direction: column;
   gap: 12px; 
@@ -10,4 +10,7 @@
   flex-direction: column;
   gap: 12px;
   color: #858DE8;
+}
+.inputContainer > span {
+  width: calc(100% - 8px);
 }

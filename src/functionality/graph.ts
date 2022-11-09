@@ -137,8 +137,8 @@ const drawCharge = (
 ) => {
   const fromX = (101 - Math.floor(currentPosition.x / 25) + charge.x) * 25;
   const fromY = (101 - Math.floor(currentPosition.y / 25) - charge.y) * 25;
-  const toX = fromX - charge.force.i * charge.force.magnitude;
-  const toY = fromY - charge.force.j * charge.force.magnitude;
+  const toX = fromX - charge.force.i * (charge.force.magnitude + 15);
+  const toY = fromY - charge.force.j * (charge.force.magnitude + 15);
   const dx = toX - fromX;
   const dy = toY - fromY;
   const angle = Math.atan2(dy, dx);
@@ -180,6 +180,8 @@ const drawCharge = (
     canvasCTX.fillStyle = "#fffd";
     canvasCTX.fillRect(textX, textY - 14, width + 8, 20);
     canvasCTX.fillStyle = charge.color;
+    canvasCTX.fillText(text, textX + 4, textY);
+    canvasCTX.fillStyle = '#33333366';
     canvasCTX.fillText(text, textX + 4, textY);
     canvasCTX.closePath();
     canvasCTX.lineWidth = 1;
