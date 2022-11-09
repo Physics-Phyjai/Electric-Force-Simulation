@@ -71,6 +71,35 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
     >
       <div style={{ width: "264px" }}>
         <SketchPicker
+          styles={{
+            default: {
+              picker: {
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+                width: "240px",
+                fontFamily: "Montserrat",
+                background: "#FFFFFF",
+                borderRadius: "8px",
+                boxShadow:
+                  "0px 10px 15px rgba(31, 41, 55, 0.1), 0px 4px 6px rgba(31, 41, 55, 0.05)",
+              },
+              saturation: {
+                borderRadius: "4px",
+                height: "166px",
+              },
+              hue: {
+                borderRadius: "100px",
+                marginBottom: "16px",
+              },
+              alpha: {
+                borderRadius: "100px",
+              },
+              color: {
+                display: "none",
+              },
+            },
+          }}
           presetColors={[
             "#B28DFF",
             "#C5A3FF",
@@ -88,10 +117,12 @@ const ChargeModal: React.FC<ChargeModalProps> = (props) => {
             "#BFFCC6",
             "#FFFFD1",
             "#FFF58A",
+            "#FFD97D",
+            "#FFC97D",
           ]}
           color={charge.color}
           onChange={(color) => {
-            charge.color = color.hex;
+            charge.color = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
             setCharge({ ...charge });
           }}
         />

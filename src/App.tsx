@@ -244,6 +244,10 @@ function App() {
         return;
       }
     });
+    const element = document.getElementById("chargeinfo-hover");
+    if (element) {
+      document.body.removeChild(element);
+    }
   };
 
   const getRandomColor = () => {
