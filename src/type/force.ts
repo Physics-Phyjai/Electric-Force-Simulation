@@ -1,3 +1,4 @@
+import { toPointFive } from "../utils/convert";
 import { Charge } from "./charge";
 
 class Force {
@@ -12,8 +13,8 @@ class Force {
   }
 
   static of(c1: Charge, c2: Charge): Force {
-    const dx = (c2.x - c1.x) * 10 ** -2;
-    const dy = (c2.y - c1.y) * 10 ** -2;
+    const dx = (toPointFive(c2.x) - toPointFive(c1.x)) * 10 ** -2;
+    const dy = (toPointFive(c2.y) - toPointFive(c1.y)) * 10 ** -2;
     const k = 9 * 10 ** 9;
     const magnitude =
       (k * (c1.charge * 10 ** -6) * (c2.charge * 10 ** -6)) /

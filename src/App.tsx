@@ -14,7 +14,7 @@ import { to2Decimal, toPointFive } from "./utils/convert";
 function App() {
   const [size, setSize] = useState([0, 0]);
 
-  const initCharge = new Charge('', 0, 0, 0, '#858DE8', new Force(0, 0, 0));
+  const initCharge = new Charge("", 0, 0, 0, "#858DE8", new Force(0, 0, 0));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(Mode.Add);
   const [currentChargeIndex, setCurrentChargeIndex] = useState<number>(-1);
@@ -135,13 +135,13 @@ function App() {
       const newChargeList = [...chargeList];
       const xPosition = to2Decimal(
         (event.clientX - canvasOffset.x) / 25 +
-        Math.floor(currentPosition.x / 25) -
-        101
+          Math.floor(currentPosition.x / 25) -
+          101
       );
       const yPosition = to2Decimal(
         101 -
-        (event.clientY - canvasOffset.y) / 25 -
-        Math.floor(currentPosition.y / 25)
+          (event.clientY - canvasOffset.y) / 25 -
+          Math.floor(currentPosition.y / 25)
       );
       newChargeList[dragChargeIndex].x = xPosition;
       newChargeList[dragChargeIndex].y = yPosition;
@@ -228,7 +228,7 @@ function App() {
     };
     chargeList.forEach((charge, index) => {
       if (isOnCharge(position, currentPosition, charge)) {
-        setMode(Mode.Edit)
+        setMode(Mode.Edit);
         setCurrentChargeIndex(index);
         setIsModalOpen(true);
         return;
@@ -245,8 +245,6 @@ function App() {
     return color;
   };
 
-
-
   return (
     <div className={style.app}>
       <div className={style.leftPanel}>
@@ -254,7 +252,8 @@ function App() {
           {chargeList.map((charge, index) => (
             <ChargeCard
               charge={charge}
-              key={charge.name} onClickEdit={() => {
+              key={charge.name}
+              onClickEdit={() => {
                 setIsModalOpen(true);
                 setCurrentChargeIndex(index);
                 setMode(Mode.Edit);
@@ -294,7 +293,7 @@ function App() {
           cursor: "pointer",
           background: "#858DE8",
           borderRadius: "50%",
-          padding: '12px',
+          padding: "12px",
           width: "48px",
           height: "48px",
           display: "flex",
@@ -313,13 +312,17 @@ function App() {
       <ChargeModal
         isModalOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
-        charge={currentChargeIndex === -1 ? initCharge : chargeList[currentChargeIndex]}
+        charge={
+          currentChargeIndex === -1
+            ? initCharge
+            : chargeList[currentChargeIndex]
+        }
         chargeListLength={chargeList.length}
         mode={mode}
         onConfirm={(newCharge) => {
           switch (mode) {
             case Mode.Add:
-              setChargeList([...chargeList, newCharge])
+              setChargeList([...chargeList, newCharge]);
               break;
             case Mode.Edit:
               chargeList[currentChargeIndex] = newCharge;
