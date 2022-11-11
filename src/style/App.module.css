@@ -6,6 +6,7 @@
 }
 .leftPanel {
     width: 25vw;
+    min-width: 350px;
     max-width: 400px;
     height: 100vh;
     background: #F1F1F1;
@@ -18,4 +19,24 @@
     flex: 1 1 auto;
     display: flex;
     cursor: pointer;
+}
+
+.hideContent {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@media screen and (max-width: 1179px) {
+    .hideContent {
+        display: flex;
+    }
+    .leftPanel, .rightPanel {
+        display: none;
+    }
 }

@@ -10,7 +10,11 @@ import { CanvasSize, Position } from "./type/canvas";
 import { Charge } from "./type/charge";
 import { Force } from "./type/force";
 import { to2Decimal, toPointFive } from "./utils/convert";
-import { randomChargeValue, randomPastelColor, randomPosition } from "./utils/random";
+import {
+  randomChargeValue,
+  randomPastelColor,
+  randomPosition,
+} from "./utils/random";
 
 function App() {
   const [size, setSize] = useState([0, 0]);
@@ -261,6 +265,13 @@ function App() {
 
   return (
     <div className={style.app}>
+      <div className={style.hideContent}>
+        <div>The current screen size is not supported by the app. </div>
+        <div>
+          Please try rotating your device to landscape mode or using a larger
+          screen.
+        </div>
+      </div>
       <div className={style.leftPanel}>
         <div style={{ maxHeight: "95vh", overflow: "scroll" }}>
           {chargeList.map((charge, index) => (
