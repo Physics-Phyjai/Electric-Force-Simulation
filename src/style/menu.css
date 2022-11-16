@@ -1,0 +1,9 @@
+.MuiMenu-paper {
+  background: #ffffff !important;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 5px !important;
+}
+.MuiMenuItem-gutters {
+    font-family: 'Montserrat', sans-serif !important;
+
+}

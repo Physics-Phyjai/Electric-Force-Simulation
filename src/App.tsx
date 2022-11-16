@@ -273,17 +273,30 @@ function App() {
       <div className={style.app}>
         <div className={style.leftPanel}>
           <div style={{ maxHeight: "95vh", overflow: "scroll" }}>
-            {chargeList.map((charge, index) => (
-              <ChargeCard
-                charge={charge}
-                key={charge.name}
-                onClickEdit={() => {
-                  setIsModalOpen(true);
-                  setCurrentChargeIndex(index);
-                  setMode(Mode.Edit);
-                }}
-              />
-            ))}
+            {chargeList.length > 0 ? (
+              <>
+                {chargeList.map((charge, index) => (
+                  <ChargeCard
+                    charge={charge}
+                    key={charge.name}
+                    onClickEdit={() => {
+                      setIsModalOpen(true);
+                      setCurrentChargeIndex(index);
+                      setMode(Mode.Edit);
+                    }}
+                    onClickDelete={() => {
+                      const newChargeList = [...chargeList];
+                      newChargeList.splice(index, 1);
+                      setChargeList(newChargeList);
+                    }}
+                  />
+                ))}
+              </>
+            ) : (
+              <div style={{margin:'1rem 0 ', textAlign:'center'}}>
+                There is no charge in the simulation now. Click on the "Add new charge" button to start adding a new charge.
+              </div>
+            )}
           </div>
           <div
             style={{
