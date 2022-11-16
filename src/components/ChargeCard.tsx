@@ -36,26 +36,27 @@ const ChargeCard = (props: ChargeCardProps) => {
       </div>
       <div className={styles.edit}>
         <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           onClick={handleClick}
         >
           <path
-            d="M7 4.375C7.48325 4.375 7.875 3.98325 7.875 3.5C7.875 3.01675 7.48325 2.625 7 2.625C6.51675 2.625 6.125 3.01675 6.125 3.5C6.125 3.98325 6.51675 4.375 7 4.375Z"
+            d="M10 6.25C10.6904 6.25 11.25 5.69036 11.25 5C11.25 4.30964 10.6904 3.75 10 3.75C9.30964 3.75 8.75 4.30964 8.75 5C8.75 5.69036 9.30964 6.25 10 6.25Z"
             fill="black"
           />
           <path
-            d="M7 7.875C7.48325 7.875 7.875 7.48325 7.875 7C7.875 6.51675 7.48325 6.125 7 6.125C6.51675 6.125 6.125 6.51675 6.125 7C6.125 7.48325 6.51675 7.875 7 7.875Z"
+            d="M10 11.25C10.6904 11.25 11.25 10.6904 11.25 10C11.25 9.30964 10.6904 8.75 10 8.75C9.30964 8.75 8.75 9.30964 8.75 10C8.75 10.6904 9.30964 11.25 10 11.25Z"
             fill="black"
           />
           <path
-            d="M7 11.375C7.48325 11.375 7.875 10.9832 7.875 10.5C7.875 10.0168 7.48325 9.625 7 9.625C6.51675 9.625 6.125 10.0168 6.125 10.5C6.125 10.9832 6.51675 11.375 7 11.375Z"
+            d="M10 16.25C10.6904 16.25 11.25 15.6904 11.25 15C11.25 14.3096 10.6904 13.75 10 13.75C9.30964 13.75 8.75 14.3096 8.75 15C8.75 15.6904 9.30964 16.25 10 16.25Z"
             fill="black"
           />
         </svg>
+
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}
@@ -64,7 +65,12 @@ const ChargeCard = (props: ChargeCardProps) => {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          <MenuItem onClick={() => {handleClose(); props.onClickEdit();}}>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              props.onClickEdit();
+            }}
+          >
             {" "}
             <svg
               width="14"
@@ -82,7 +88,12 @@ const ChargeCard = (props: ChargeCardProps) => {
             </svg>
             <span style={{ marginLeft: "8px" }}>Edit</span>
           </MenuItem>
-          <MenuItem onClick={() => {handleClose(); props.onClickDelete();}}>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              props.onClickDelete();
+            }}
+          >
             <svg
               width="14"
               height="14"
