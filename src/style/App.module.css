@@ -5,16 +5,14 @@
     padding: 0;
 }
 .leftPanel {
-    width: 25vw;
-    min-width: 350px;
-    max-width: 400px;
+    width: 400px;
     height: 100vh;
     background: #F1F1F1;
     padding: 0rem 2rem;
 }
 
 .rightPanel {
-    min-width: 75vw;
+    min-width: calc(100vw - 400px);
     height: 100vh;
     flex: 1 1 auto;
     display: flex;
@@ -36,7 +34,7 @@
     .hideContent {
         display: flex;
     }
-    .leftPanel, .rightPanel {
+    .app {
         display: none;
     }
 }

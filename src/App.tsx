@@ -15,6 +15,7 @@ import {
   randomPastelColor,
   randomPosition,
 } from "./utils/random";
+import UserManual from "./components/UserManual";
 
 function App() {
   const [size, setSize] = useState([0, 0]);
@@ -32,6 +33,8 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<Mode>(Mode.Add);
   const [currentChargeIndex, setCurrentChargeIndex] = useState<number>(-1);
+
+  const [isDisplayManual, setIsDisplayManual] = useState(true);
 
   useLayoutEffect(() => {
     const updateSize = () => {
@@ -254,17 +257,12 @@ function App() {
     }
   };
 
-  const getRandomColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+  const showUserManual = () => {
+    setIsDisplayManual(true);
   };
 
   return (
-    <div className={style.app}>
+    <>
       <div className={style.hideContent}>
         <div>The current screen size is not supported by the app. </div>
         <div>
@@ -272,90 +270,120 @@ function App() {
           screen.
         </div>
       </div>
-      <div className={style.leftPanel}>
-        <div style={{ maxHeight: "95vh", overflow: "scroll" }}>
-          {chargeList.map((charge, index) => (
-            <ChargeCard
-              charge={charge}
-              key={charge.name}
-              onClickEdit={() => {
+      <div className={style.app}>
+        <div className={style.leftPanel}>
+          <div style={{ maxHeight: "95vh", overflow: "scroll" }}>
+            {chargeList.map((charge, index) => (
+              <ChargeCard
+                charge={charge}
+                key={charge.name}
+                onClickEdit={() => {
+                  setIsModalOpen(true);
+                  setCurrentChargeIndex(index);
+                  setMode(Mode.Edit);
+                }}
+              />
+            ))}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              height: "5vh",
+            }}
+          >
+            <Button
+              text="Add new charge"
+              icon="plus"
+              onClick={() => {
+                setCurrentChargeIndex(-1);
+                setMode(Mode.Add);
                 setIsModalOpen(true);
-                setCurrentChargeIndex(index);
-                setMode(Mode.Edit);
               }}
             />
-          ))}
+          </div>
+        </div>
+        <div className={style.rightPanel}>
+          <canvas
+            id="canvas"
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseDown={handleMouseDown}
+            onMouseOut={handleMouseOut}
+            onDoubleClick={handleDoubleClick}
+          ></canvas>
+        </div>
+        {isDisplayManual && (
+          <UserManual onClose={() => setIsDisplayManual(false)} />
+        )}
+        <div
+          style={{
+            position: "absolute",
+            right: 25,
+            top: 25,
+            cursor: "pointer",
+            background: "#858DE8",
+            borderRadius: "50%",
+            padding: "12px",
+            width: "48px",
+            height: "48px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onClick={() => {
+            setIsDisplayManual(true);
+          }}
+        >
+          <img src="images/info.png" height="24px"></img>
         </div>
         <div
-          style={{ display: "flex", justifyContent: "flex-end", height: "5vh" }}
+          style={{
+            position: "absolute",
+            right: 25,
+            bottom: 25,
+            cursor: "pointer",
+            background: "#858DE8",
+            borderRadius: "50%",
+            padding: "12px",
+            width: "48px",
+            height: "48px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onClick={() => {
+            setCurrentPosition({
+              x: 2550 - canvasSize.width / 2,
+              y: 2550 - canvasSize.height / 2,
+            });
+          }}
         >
-          <Button
-            text="Add new charge"
-            icon="plus"
-            onClick={() => {
-              setCurrentChargeIndex(-1);
-              setMode(Mode.Add);
-              setIsModalOpen(true);
-            }}
-          />
+          <img src="images/focus.svg" width="24px" height="24px"></img>
         </div>
-      </div>
-      <div className={style.rightPanel}>
-        <canvas
-          id="canvas"
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseDown={handleMouseDown}
-          onMouseOut={handleMouseOut}
-          onDoubleClick={handleDoubleClick}
-        ></canvas>
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          right: 25,
-          bottom: 25,
-          cursor: "pointer",
-          background: "#858DE8",
-          borderRadius: "50%",
-          padding: "12px",
-          width: "48px",
-          height: "48px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onClick={() => {
-          setCurrentPosition({
-            x: 2550 - canvasSize.width / 2,
-            y: 2550 - canvasSize.height / 2,
-          });
-        }}
-      >
-        <img src="images/focus.svg" width="24px" height="24px"></img>
-      </div>
-      <ChargeModal
-        isModalOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
-        charge={
-          currentChargeIndex === -1
-            ? initCharge()
-            : chargeList[currentChargeIndex]
-        }
-        chargeListLength={chargeList.length}
-        mode={mode}
-        onConfirm={(newCharge) => {
-          switch (mode) {
-            case Mode.Add:
-              setChargeList([...chargeList, newCharge]);
-              break;
-            case Mode.Edit:
-              chargeList[currentChargeIndex] = newCharge;
-              setChargeList([...chargeList]);
+        <ChargeModal
+          isModalOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+          charge={
+            currentChargeIndex === -1
+              ? initCharge()
+              : chargeList[currentChargeIndex]
           }
-        }}
-      />
-    </div>
+          chargeListLength={chargeList.length}
+          mode={mode}
+          onConfirm={(newCharge) => {
+            switch (mode) {
+              case Mode.Add:
+                setChargeList([...chargeList, newCharge]);
+                break;
+              case Mode.Edit:
+                chargeList[currentChargeIndex] = newCharge;
+                setChargeList([...chargeList]);
+            }
+          }}
+        />
+      </div>
+    </>
   );
 }
 
