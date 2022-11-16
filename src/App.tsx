@@ -17,6 +17,7 @@ import {
 } from "./utils/random";
 import UserManual from "./components/UserManual";
 
+const minimumScreenWidth = 1179;
 function App() {
   const [size, setSize] = useState([0, 0]);
 
@@ -152,13 +153,13 @@ function App() {
       const newChargeList = [...chargeList];
       const xPosition = to2Decimal(
         (event.clientX - canvasOffset.x) / 25 +
-          Math.floor(currentPosition.x / 25) -
-          101
+        Math.floor(currentPosition.x / 25) -
+        101
       );
       const yPosition = to2Decimal(
         101 -
-          (event.clientY - canvasOffset.y) / 25 -
-          Math.floor(currentPosition.y / 25)
+        (event.clientY - canvasOffset.y) / 25 -
+        Math.floor(currentPosition.y / 25)
       );
       newChargeList[dragChargeIndex].x = xPosition;
       newChargeList[dragChargeIndex].y = yPosition;
@@ -293,7 +294,7 @@ function App() {
                 ))}
               </>
             ) : (
-              <div style={{margin:'1rem 0 ', textAlign:'center'}}>
+              <div style={{ margin: '1rem 0 ', textAlign: 'center' }}>
                 There is no charge in the simulation now. Click on the "Add new charge" button to start adding a new charge.
               </div>
             )}
@@ -326,7 +327,7 @@ function App() {
             onDoubleClick={handleDoubleClick}
           ></canvas>
         </div>
-        {isDisplayManual && (
+        {isDisplayManual && size[0] > 1179 && (
           <UserManual onClose={() => setIsDisplayManual(false)} />
         )}
         <div
