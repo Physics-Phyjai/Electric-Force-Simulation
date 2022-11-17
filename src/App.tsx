@@ -288,6 +288,7 @@ function App() {
                     onClickDelete={() => {
                       const newChargeList = [...chargeList];
                       newChargeList.splice(index, 1);
+                      setCurrentChargeIndex(-1);
                       setChargeList(newChargeList);
                     }}
                   />
