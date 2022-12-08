@@ -20,10 +20,10 @@ const renderChargeInfo = (charge: Charge, position: Position) => {
             <div style="font-weight: 600">${charge.name}</div>
         </div>
         <div style="padding-top: .25rem">
-        X: ${toPointFive(charge.x)} cm Y: ${Math.round(charge.y * 2) / 2} cm Q: ${charge.charge} μC
+        X: ${toPointFive(charge.x)} cm Y: ${Math.round(charge.y * 2) / 2} cm Q: ${charge.charge} μC F: ${charge.force.magnitude.toFixed(2)} N
         </div>
     `
     document.body.appendChild(divElement)
 }
 
-export {renderChargeInfo}
+export { renderChargeInfo }
