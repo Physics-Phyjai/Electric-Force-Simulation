@@ -37,7 +37,35 @@ class Force {
   getForce = (): string => {
     const force = this.magnitude * (this.i ** 2 + this.j ** 2);
     return `${Math.abs(force).toFixed(2)} N`;
-  }
+  };
+
+  getAngle = (): string => {
+    if (this.i == 0) {
+      if (this.j > 0) {
+        return "0";
+      } else {
+        return "180";
+      }
+    } else if (this.j == 0) {
+      if (this.i > 0) {
+        return "-90";
+      } else {
+        return "90";
+      }
+    } else {
+      const angle = (Math.atan(Math.abs(this.j / this.i)) * 180) / Math.PI;
+      if (this.j > 0 && this.i < 0) {
+        return `${(90 - angle).toFixed(2)}`;
+      } else if (this.j > 0 && this.i > 0) {
+        return `-${(90 - angle).toFixed(2)}`;
+      } else if (this.j < 0 && this.i < 0) {
+        return `${(90 + angle).toFixed(2)}`;
+      } else if (this.j < 0 && this.i > 0) {
+        return `-${(90 + angle).toFixed(2)}`;
+      }
+    }
+    return "0";
+  };
 }
 
 export { Force };
