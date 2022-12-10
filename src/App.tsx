@@ -1,4 +1,10 @@
-import { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
+import {
+  MouseEvent,
+  TouchEvent,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import ChargeModal, { Mode } from "./components/ChargeModal";
 import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
@@ -131,7 +137,10 @@ function App() {
       "canvas"
     ) as HTMLCanvasElement;
     const parent = canvas.parentElement;
-    setCanvasSize({ width: parent?.offsetWidth ?? 1000, height: parent?.offsetHeight ?? 1000 });
+    setCanvasSize({
+      width: parent?.offsetWidth ?? 1000,
+      height: parent?.offsetHeight ?? 1000,
+    });
     setCanvasOffset({ x: parent?.offsetLeft ?? 0, y: parent?.offsetTop ?? 0 });
     setCurrentPosition({
       x: 2550 - canvas.width / 2,
@@ -256,6 +265,85 @@ function App() {
     }
   };
 
+  const handleTouchStart = (event: TouchEvent<HTMLCanvasElement>) => {
+    document.getElementById("canvas")?.focus();
+    let touch = event.targetTouches[0];
+    let onCharge = false;
+    setMousePosition({ x: touch.clientX, y: touch.clientY });
+    const position: Position = {
+      x: touch.clientX - canvasOffset.x,
+      y: touch.clientY - canvasOffset.y,
+    };
+    chargeList.forEach((charge, index) => {
+      if (isOnCharge(position, currentPosition, charge)) {
+        onCharge = true;
+        setDragChargeIndex(index);
+      }
+    });
+    if (!onCharge) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleTouchMove = (event: TouchEvent<HTMLCanvasElement>) => {
+    let touch = event.targetTouches[0];
+    if (isDragging) {
+      setCurrentPosition({
+        x: currentPosition.x - (touch.clientX - mousePosition.x),
+        y: currentPosition.y - (touch.clientY - mousePosition.y),
+      });
+      setMousePosition({ x: touch.clientX, y: touch.clientY });
+    } else if (dragChargeIndex != null) {
+      const newChargeList = [...chargeList];
+      const xPosition = to2Decimal(
+        (touch.clientX - canvasOffset.x) / 25 +
+          Math.floor(currentPosition.x / 25) -
+          101
+      );
+      const yPosition = to2Decimal(
+        101 -
+          (touch.clientY - canvasOffset.y) / 25 -
+          Math.floor(currentPosition.y / 25)
+      );
+      newChargeList[dragChargeIndex].x = xPosition;
+      newChargeList[dragChargeIndex].y = yPosition;
+      setChargeList(newChargeList);
+    }
+    const position: Position = {
+      x: touch.clientX - canvasOffset.x,
+      y: touch.clientY - canvasOffset.y,
+    };
+    let onCharge = null;
+    chargeList.forEach((charge) => {
+      if (isOnCharge(position, currentPosition, charge)) {
+        onCharge = charge;
+      }
+    });
+    if (onCharge) {
+      const element = document.getElementById("chargeinfo-hover");
+      if (element) {
+        document.body.removeChild(element);
+      }
+      renderChargeInfo(onCharge, {
+        x: touch.clientX + 25,
+        y: touch.clientY + 25,
+      } as Position);
+    } else {
+      const element = document.getElementById("chargeinfo-hover");
+      if (element) {
+        document.body.removeChild(element);
+      }
+    }
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLCanvasElement>) => {
+    const element = document.getElementById("chargeinfo-hover");
+    if (element) {
+      document.body.removeChild(element);
+      setDragChargeIndex(null);
+    }
+  };
+
   useEffect(() => {
     const element = document.getElementById("left");
     if (element) {
@@ -339,6 +427,9 @@ function App() {
           <canvas
             id="canvas"
             onMouseMove={handleMouseMove}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             onMouseUp={handleMouseUp}
             onMouseDown={handleMouseDown}
             onMouseOut={handleMouseOut}

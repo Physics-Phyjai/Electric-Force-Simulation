@@ -3,6 +3,8 @@
     height: 100vh;
     display: flex;
     padding: 0;
+    overflow: hidden;
+    max-height: -webkit-fill-available;
 }
 .leftPanel {
     display: block;
@@ -20,27 +22,11 @@
     cursor: pointer;
 }
 
-.hideContent {
-    display: none;
-    width: 100vw;
-    height: 100vh;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-direction: column;
-    gap: 8px;
-}
 .menu {
     display: none;
 }
 
 @media screen and (max-width: 1179px) {
-    /* .hideContent {
-        display: flex;
-    }
-    .app {
-        display: none;
-    } */
     .leftPanel {
         display: none;
         width: 100vw;

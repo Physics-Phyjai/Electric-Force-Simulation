@@ -2,17 +2,17 @@ import { Position } from "../type/canvas";
 import { Charge } from "../type/charge";
 
 const getChargeRadius = (charge: number) => {
-  return (5 / 6) * Math.abs(charge) + (5 - 5 / 6);
+  var chargeSize = window.innerWidth >= 1200 ? 5 : 12;
+  return (5 / 6) * Math.abs(charge) + (chargeSize - 5 / 6);
 };
-
+const getGridSize = () => 25;
 const drawGrid = (
   canvasCTX: CanvasRenderingContext2D,
   canvasSize: { width: number; height: number },
   y_axis_distance_grid_lines: number = 0,
   x_axis_distance_grid_lines: number = 0
 ) => {
-  var grid_size = 25;
-
+  var grid_size = getGridSize();
   var num_lines_x = Math.floor(201);
   var num_lines_y = Math.floor(201);
   for (var i = 0; i <= num_lines_x; i++) {
@@ -53,23 +53,29 @@ const drawGrid = (
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
 
-    canvasCTX.moveTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines - 3);
-    canvasCTX.lineTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines + 3);
+    canvasCTX.moveTo(
+      grid_size * i + 0.5,
+      grid_size * x_axis_distance_grid_lines - 3
+    );
+    canvasCTX.lineTo(
+      grid_size * i + 0.5,
+      grid_size * x_axis_distance_grid_lines + 3
+    );
     canvasCTX.stroke();
     if (i % 5 == 0) {
       canvasCTX.font = "12px Montserrat";
       canvasCTX.textAlign = "start";
       canvasCTX.fillText(
         `${i}`,
-        25 * y_axis_distance_grid_lines + grid_size * i - 2,
-        25 * x_axis_distance_grid_lines + 15
+        grid_size * y_axis_distance_grid_lines + grid_size * i - 2,
+        grid_size * x_axis_distance_grid_lines + 15
       );
     }
   }
   canvasCTX.fillText(
     `0`,
-    25 * y_axis_distance_grid_lines + 5,
-    25 * x_axis_distance_grid_lines + 15
+    grid_size * y_axis_distance_grid_lines + 5,
+    grid_size * x_axis_distance_grid_lines + 15
   );
 
   for (i = 1; i < y_axis_distance_grid_lines; i++) {
@@ -77,16 +83,22 @@ const drawGrid = (
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
 
-    canvasCTX.moveTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines - 3);
-    canvasCTX.lineTo(grid_size * i + 0.5, 25 * x_axis_distance_grid_lines + 3);
+    canvasCTX.moveTo(
+      grid_size * i + 0.5,
+      grid_size * x_axis_distance_grid_lines - 3
+    );
+    canvasCTX.lineTo(
+      grid_size * i + 0.5,
+      grid_size * x_axis_distance_grid_lines + 3
+    );
     canvasCTX.stroke();
     if (i % 5 == 0) {
       canvasCTX.font = "12px Montserrat";
       canvasCTX.textAlign = "end";
       canvasCTX.fillText(
         `-${i}`,
-        25 * y_axis_distance_grid_lines + -grid_size * i + 3,
-        25 * x_axis_distance_grid_lines + 15
+        grid_size * y_axis_distance_grid_lines + -grid_size * i + 3,
+        grid_size * x_axis_distance_grid_lines + 15
       );
     }
   }
@@ -96,16 +108,16 @@ const drawGrid = (
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
 
-    canvasCTX.moveTo(25 * y_axis_distance_grid_lines - 3, grid_size * i + 0.5);
-    canvasCTX.lineTo(25 * y_axis_distance_grid_lines + 3, grid_size * i + 0.5);
+    canvasCTX.moveTo(grid_size * y_axis_distance_grid_lines - 3, grid_size * i + 0.5);
+    canvasCTX.lineTo(grid_size * y_axis_distance_grid_lines + 3, grid_size * i + 0.5);
     canvasCTX.stroke();
     if (i % 5 == 0) {
       canvasCTX.font = "12px Montserrat";
       canvasCTX.textAlign = "start";
       canvasCTX.fillText(
         `-${i}`,
-        25 * y_axis_distance_grid_lines + 8,
-        25 * x_axis_distance_grid_lines + grid_size * i + 3
+        grid_size * y_axis_distance_grid_lines + 8,
+        grid_size * x_axis_distance_grid_lines + grid_size * i + 3
       );
     }
   }
@@ -115,16 +127,22 @@ const drawGrid = (
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
 
-    canvasCTX.moveTo(25 * y_axis_distance_grid_lines - 3, -grid_size * i + 0.5);
-    canvasCTX.lineTo(25 * y_axis_distance_grid_lines + 3, -grid_size * i + 0.5);
+    canvasCTX.moveTo(
+      grid_size * y_axis_distance_grid_lines - 3,
+      -grid_size * i + 0.5
+    );
+    canvasCTX.lineTo(
+      grid_size * y_axis_distance_grid_lines + 3,
+      -grid_size * i + 0.5
+    );
     canvasCTX.stroke();
     if (i % 5 == 0) {
       canvasCTX.font = "12px Montserrat";
       canvasCTX.textAlign = "start";
       canvasCTX.fillText(
         `${i}`,
-        25 * y_axis_distance_grid_lines + 8,
-        25 * x_axis_distance_grid_lines - grid_size * i + 3
+        grid_size * y_axis_distance_grid_lines + 8,
+        grid_size * x_axis_distance_grid_lines - grid_size * i + 3
       );
     }
   }
@@ -135,8 +153,11 @@ const drawCharge = (
   currentPosition: Position,
   charge: Charge
 ) => {
-  const fromX = (101 - Math.floor(currentPosition.x / 25) + charge.x) * 25;
-  const fromY = (101 - Math.floor(currentPosition.y / 25) - charge.y) * 25;
+  var grid_size = getGridSize();
+  const fromX =
+    (101 - Math.floor(currentPosition.x / grid_size) + charge.x) * grid_size;
+  const fromY =
+    (101 - Math.floor(currentPosition.y / grid_size) - charge.y) * grid_size;
   const toX = fromX - charge.force.i * (charge.force.magnitude + 15);
   const toY = fromY - charge.force.j * (charge.force.magnitude + 15);
   const dx = toX - fromX;
@@ -174,14 +195,14 @@ const drawCharge = (
     const width = canvasCTX.measureText(text).width;
     let textX = fromX + dx / 2 + Math.abs(15 * Math.sin(angle)) - 10;
     let textY = fromY + dy / 2 + Math.abs(15 * Math.cos(angle)) - 10;
-    if (width + 50 > Math.sqrt(dx ** 2 + dy ** 2)) {
+    if (width + (grid_size * 2) > Math.sqrt(dx ** 2 + dy ** 2)) {
       textY = fromY + dy / 2 + 20;
     }
     canvasCTX.fillStyle = "#fffd";
     canvasCTX.fillRect(textX, textY - 14, width + 8, 20);
     canvasCTX.fillStyle = charge.color;
     canvasCTX.fillText(text, textX + 4, textY);
-    canvasCTX.fillStyle = '#33333366';
+    canvasCTX.fillStyle = "#33333366";
     canvasCTX.fillText(text, textX + 4, textY);
     canvasCTX.closePath();
     canvasCTX.lineWidth = 1;
@@ -201,8 +222,11 @@ const isOnCharge = (
   currentPosition: Position,
   charge: Charge
 ) => {
-  const centerX = (101 - Math.floor(currentPosition.x / 25) + charge.x) * 25;
-  const centerY = (101 - Math.floor(currentPosition.y / 25) - charge.y) * 25;
+  var grid_size = getGridSize();
+  const centerX =
+    (101 - Math.floor(currentPosition.x / grid_size) + charge.x) * grid_size;
+  const centerY =
+    (101 - Math.floor(currentPosition.y / grid_size) - charge.y) * grid_size;
   const dx = position.x - centerX;
   const dy = position.y - centerY;
   return Math.sqrt(dx * dx + dy * dy) < getChargeRadius(charge.charge);
