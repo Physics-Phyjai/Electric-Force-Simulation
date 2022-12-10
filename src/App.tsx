@@ -10,7 +10,13 @@ import Button from "./components/Button";
 import ChargeCard from "./components/ChargeCard";
 import { renderChargeInfo } from "./components/ChargeInfo";
 import { findForce } from "./functionality/force";
-import { drawCharge, drawGrid, isOnCharge } from "./functionality/graph";
+import {
+  drawCharge,
+  drawGrid,
+  getDefaultChargeRadius,
+  getGridSize,
+  isOnCharge,
+} from "./functionality/graph";
 import style from "./style/App.module.css";
 import { CanvasSize, Position } from "./type/canvas";
 import { Charge } from "./type/charge";
@@ -95,6 +101,7 @@ function App() {
   }, [chargeList]);
 
   useEffect(() => {
+    const grid_size = getGridSize();
     if (canvasCTX) {
       canvasCTX.moveTo(0, 0);
       canvasCTX.clearRect(0, 0, canvasSize.width, canvasSize.height);
@@ -106,25 +113,25 @@ function App() {
         setCurrentPosition({ x: currentPosition.x, y: 0 });
         return;
       }
-      if (currentPosition.x > 5075 - canvasSize.width) {
+      if (currentPosition.x > 203 * grid_size - canvasSize.width) {
         setCurrentPosition({
-          x: 5075 - canvasSize.width,
+          x: 203 * grid_size - canvasSize.width,
           y: currentPosition.y,
         });
         return;
       }
-      if (currentPosition.y > 5075 - canvasSize.height) {
+      if (currentPosition.y > 203 * grid_size - canvasSize.height) {
         setCurrentPosition({
           x: currentPosition.x,
-          y: 5075 - canvasSize.height,
+          y: 203 * grid_size - canvasSize.height,
         });
         return;
       }
       drawGrid(
         canvasCTX,
         canvasSize,
-        101 - Math.floor(currentPosition.x / 25),
-        101 - Math.floor(currentPosition.y / 25)
+        101 - Math.floor(currentPosition.x / grid_size),
+        101 - Math.floor(currentPosition.y / grid_size)
       );
       chargeForceList.forEach((charge) => {
         drawCharge(canvasCTX, currentPosition, charge);
@@ -133,6 +140,7 @@ function App() {
   }, [chargeForceList, currentPosition.x, currentPosition.y]);
 
   const initializeCanvas = (): HTMLCanvasElement => {
+    const grid_size = getGridSize();
     const canvas: HTMLCanvasElement = document.getElementById(
       "canvas"
     ) as HTMLCanvasElement;
@@ -143,14 +151,16 @@ function App() {
     });
     setCanvasOffset({ x: parent?.offsetLeft ?? 0, y: parent?.offsetTop ?? 0 });
     setCurrentPosition({
-      x: 2550 - (parent?.offsetWidth ?? 1000) / 2,
-      y: 2550 - (parent?.offsetHeight ?? 1000) / 2,
+      x: 102 * grid_size - (parent?.offsetWidth ?? 1000) / 2,
+      y: 102 * grid_size - (parent?.offsetHeight ?? 1000) / 2,
     });
 
     return canvas;
   };
 
   const handleMouseMove = (event: MouseEvent<HTMLCanvasElement>) => {
+    const grid_size = getGridSize();
+    const charge_radius = getDefaultChargeRadius();
     if (isDragging) {
       setCurrentPosition({
         x: currentPosition.x - (event.clientX - mousePosition.x),
@@ -160,14 +170,14 @@ function App() {
     } else if (dragChargeIndex != null) {
       const newChargeList = [...chargeList];
       const xPosition = to2Decimal(
-        (event.clientX - canvasOffset.x) / 25 +
-          Math.floor(currentPosition.x / 25) -
+        (event.clientX - canvasOffset.x) / grid_size +
+          Math.floor(currentPosition.x / grid_size) -
           101
       );
       const yPosition = to2Decimal(
         101 -
-          (event.clientY - canvasOffset.y) / 25 -
-          Math.floor(currentPosition.y / 25)
+          (event.clientY - canvasOffset.y) / grid_size -
+          Math.floor(currentPosition.y / grid_size)
       );
       newChargeList[dragChargeIndex].x = xPosition;
       newChargeList[dragChargeIndex].y = yPosition;
@@ -189,8 +199,8 @@ function App() {
         document.body.removeChild(element);
       }
       renderChargeInfo(onCharge, {
-        x: event.clientX + 25,
-        y: event.clientY + 25,
+        x: event.clientX + charge_radius,
+        y: event.clientY + charge_radius,
       } as Position);
     } else {
       const element = document.getElementById("chargeinfo-hover");
@@ -287,6 +297,8 @@ function App() {
   };
 
   const handleTouchMove = (event: TouchEvent<HTMLCanvasElement>) => {
+    const grid_size = getGridSize();
+    const charge_radius = getDefaultChargeRadius();
     let touch = event.targetTouches[0];
     if (isDragging) {
       setCurrentPosition({
@@ -297,14 +309,14 @@ function App() {
     } else if (dragChargeIndex != null) {
       const newChargeList = [...chargeList];
       const xPosition = to2Decimal(
-        (touch.clientX - canvasOffset.x) / 25 +
-          Math.floor(currentPosition.x / 25) -
+        (touch.clientX - canvasOffset.x) / grid_size +
+          Math.floor(currentPosition.x / grid_size) -
           101
       );
       const yPosition = to2Decimal(
         101 -
-          (touch.clientY - canvasOffset.y) / 25 -
-          Math.floor(currentPosition.y / 25)
+          (touch.clientY - canvasOffset.y) / grid_size -
+          Math.floor(currentPosition.y / grid_size)
       );
       newChargeList[dragChargeIndex].x = xPosition;
       newChargeList[dragChargeIndex].y = yPosition;
@@ -326,8 +338,8 @@ function App() {
         document.body.removeChild(element);
       }
       renderChargeInfo(onCharge, {
-        x: touch.clientX + 25,
-        y: touch.clientY + 25,
+        x: touch.clientX + charge_radius,
+        y: touch.clientY + charge_radius,
       } as Position);
     } else {
       const element = document.getElementById("chargeinfo-hover");
@@ -341,6 +353,14 @@ function App() {
     const element = document.getElementById("chargeinfo-hover");
     if (element) {
       document.body.removeChild(element);
+    }
+    if (dragChargeIndex != null) {
+      const xPosition = toPointFive(chargeList[dragChargeIndex].x);
+      const yPosition = toPointFive(chargeList[dragChargeIndex].y);
+      const newChargeList = [...chargeList];
+      newChargeList[dragChargeIndex].x = xPosition;
+      newChargeList[dragChargeIndex].y = yPosition;
+      setChargeList(newChargeList);
       setDragChargeIndex(null);
     }
   };
@@ -479,9 +499,10 @@ function App() {
             alignItems: "center",
           }}
           onClick={() => {
+            const grid_size = getGridSize();
             setCurrentPosition({
-              x: 2550 - canvasSize.width / 2,
-              y: 2550 - canvasSize.height / 2,
+              x: 102 * grid_size - canvasSize.width / 2,
+              y: 102 * grid_size - canvasSize.height / 2,
             });
           }}
         >

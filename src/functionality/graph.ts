@@ -2,20 +2,21 @@ import { Position } from "../type/canvas";
 import { Charge } from "../type/charge";
 
 const getChargeRadius = (charge: number) => {
-  var chargeSize = window.innerWidth >= 1200 ? 5 : 12;
+  const chargeSize = getDefaultChargeRadius();
   return (5 / 6) * Math.abs(charge) + (chargeSize - 5 / 6);
 };
-const getGridSize = () => 25;
+const getDefaultChargeRadius = () => (window.innerWidth >= 1200 ? 8 : 16);
+const getGridSize = () => (window.innerWidth >= 1200 ? 50 : 75);
 const drawGrid = (
   canvasCTX: CanvasRenderingContext2D,
   canvasSize: { width: number; height: number },
   y_axis_distance_grid_lines: number = 0,
   x_axis_distance_grid_lines: number = 0
 ) => {
-  var grid_size = getGridSize();
-  var num_lines_x = Math.floor(201);
-  var num_lines_y = Math.floor(201);
-  for (var i = 0; i <= num_lines_x; i++) {
+  const grid_size = getGridSize();
+  const num_lines_x = Math.floor(201);
+  const num_lines_y = Math.floor(201);
+  for (let i = 0; i <= num_lines_x; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
 
@@ -32,7 +33,7 @@ const drawGrid = (
     canvasCTX.stroke();
   }
 
-  for (i = 0; i <= num_lines_y; i++) {
+  for (let i = 0; i <= num_lines_y; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
     if (i == y_axis_distance_grid_lines) canvasCTX.strokeStyle = "#333333";
@@ -48,7 +49,7 @@ const drawGrid = (
     canvasCTX.stroke();
   }
 
-  for (i = 1; i < num_lines_y - y_axis_distance_grid_lines; i++) {
+  for (let i = 1; i < num_lines_y - y_axis_distance_grid_lines; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
@@ -78,7 +79,7 @@ const drawGrid = (
     grid_size * x_axis_distance_grid_lines + 15
   );
 
-  for (i = 1; i < y_axis_distance_grid_lines; i++) {
+  for (let i = 1; i < y_axis_distance_grid_lines; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
@@ -103,13 +104,19 @@ const drawGrid = (
     }
   }
 
-  for (i = 1; i < num_lines_x - x_axis_distance_grid_lines; i++) {
+  for (let i = 1; i < num_lines_x - x_axis_distance_grid_lines; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
 
-    canvasCTX.moveTo(grid_size * y_axis_distance_grid_lines - 3, grid_size * i + 0.5);
-    canvasCTX.lineTo(grid_size * y_axis_distance_grid_lines + 3, grid_size * i + 0.5);
+    canvasCTX.moveTo(
+      grid_size * y_axis_distance_grid_lines - 3,
+      grid_size * i + 0.5
+    );
+    canvasCTX.lineTo(
+      grid_size * y_axis_distance_grid_lines + 3,
+      grid_size * i + 0.5
+    );
     canvasCTX.stroke();
     if (i % 5 == 0) {
       canvasCTX.font = "12px Montserrat";
@@ -122,7 +129,7 @@ const drawGrid = (
     }
   }
 
-  for (i = 1; i < x_axis_distance_grid_lines; i++) {
+  for (let i = 1; i < x_axis_distance_grid_lines; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
     canvasCTX.strokeStyle = "#333333";
@@ -153,7 +160,8 @@ const drawCharge = (
   currentPosition: Position,
   charge: Charge
 ) => {
-  var grid_size = getGridSize();
+  const grid_size = getGridSize();
+  const charge_radius = getDefaultChargeRadius();
   const fromX =
     (101 - Math.floor(currentPosition.x / grid_size) + charge.x) * grid_size;
   const fromY =
@@ -163,10 +171,16 @@ const drawCharge = (
   const dx = toX - fromX;
   const dy = toY - fromY;
   const angle = Math.atan2(dy, dx);
+  canvasCTX.beginPath();
+  canvasCTX.fillStyle = charge.color;
+  canvasCTX.strokeStyle = charge.color;
+  canvasCTX.arc(fromX, fromY, getChargeRadius(charge.charge), 0, 2 * Math.PI);
+  canvasCTX.fill();
+  canvasCTX.closePath();
   if (charge.force.magnitude != 0) {
     canvasCTX.fillStyle = charge.color;
     canvasCTX.strokeStyle = charge.color;
-    canvasCTX.lineWidth = 4;
+    canvasCTX.lineWidth = charge_radius / 2;
     canvasCTX.beginPath();
     canvasCTX.moveTo(fromX, fromY);
     canvasCTX.lineTo(toX, toY);
@@ -193,10 +207,18 @@ const drawCharge = (
     canvasCTX.beginPath();
     const text = charge.force.getForce();
     const width = canvasCTX.measureText(text).width;
-    let textX = fromX + dx / 2 + Math.abs(15 * Math.sin(angle)) - 10;
-    let textY = fromY + dy / 2 + Math.abs(15 * Math.cos(angle)) - 10;
-    if (width + (grid_size * 2) > Math.sqrt(dx ** 2 + dy ** 2)) {
-      textY = fromY + dy / 2 + 20;
+    let textX =
+      fromX +
+      Math.min(Math.abs(dx / 2), grid_size * 2) * (dx > 0 ? 1 : -1) +
+      Math.abs(15 * Math.sin(angle)) -
+      10;
+    let textY =
+      fromY +
+      Math.min(Math.abs(dy / 2), grid_size * 2) * (dy > 0 ? 1 : -1) +
+      Math.abs(15 * Math.cos(angle)) -
+      10;
+    if (width + grid_size * 2 > Math.sqrt(dx ** 2 + dy ** 2)) {
+      textY = fromY + dy / 2 + charge_radius * 2;
     }
     canvasCTX.fillStyle = "#fffd";
     canvasCTX.fillRect(textX, textY - 14, width + 8, 20);
@@ -207,12 +229,6 @@ const drawCharge = (
     canvasCTX.closePath();
     canvasCTX.lineWidth = 1;
   }
-  canvasCTX.beginPath();
-  canvasCTX.fillStyle = charge.color;
-  canvasCTX.strokeStyle = charge.color;
-  canvasCTX.arc(fromX, fromY, getChargeRadius(charge.charge), 0, 2 * Math.PI);
-  canvasCTX.fill();
-  canvasCTX.closePath();
   canvasCTX.strokeStyle = "#333333";
   canvasCTX.fillStyle = "#333333";
 };
@@ -222,7 +238,7 @@ const isOnCharge = (
   currentPosition: Position,
   charge: Charge
 ) => {
-  var grid_size = getGridSize();
+  const grid_size = getGridSize();
   const centerX =
     (101 - Math.floor(currentPosition.x / grid_size) + charge.x) * grid_size;
   const centerY =
@@ -232,4 +248,10 @@ const isOnCharge = (
   return Math.sqrt(dx * dx + dy * dy) < getChargeRadius(charge.charge);
 };
 
-export { drawGrid, drawCharge, isOnCharge };
+export {
+  drawGrid,
+  drawCharge,
+  isOnCharge,
+  getGridSize,
+  getDefaultChargeRadius,
+};
