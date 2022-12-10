@@ -40,6 +40,5 @@
     .menu {
         display: flex;
         position: absolute;
-        z-index: 100;
     }
 }
