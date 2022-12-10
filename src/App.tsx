@@ -143,9 +143,10 @@ function App() {
     });
     setCanvasOffset({ x: parent?.offsetLeft ?? 0, y: parent?.offsetTop ?? 0 });
     setCurrentPosition({
-      x: 2550 - canvas.width / 2,
-      y: 2550 - canvas.height / 2,
+      x: 2550 - (parent?.offsetWidth ?? 1000) / 2,
+      y: 2550 - (parent?.offsetHeight ?? 1000) / 2,
     });
+
     return canvas;
   };
 
