@@ -131,9 +131,7 @@ function App() {
       "canvas"
     ) as HTMLCanvasElement;
     const parent = canvas.parentElement;
-    canvas.width = parent?.offsetWidth ?? 1000;
-    canvas.height = parent?.offsetHeight ?? 1000;
-    setCanvasSize({ width: canvas.width, height: canvas.height });
+    setCanvasSize({ width: parent?.offsetWidth ?? 1000, height: parent?.offsetHeight ?? 1000 });
     setCanvasOffset({ x: parent?.offsetLeft ?? 0, y: parent?.offsetTop ?? 0 });
     setCurrentPosition({
       x: 2550 - canvas.width / 2,
@@ -345,6 +343,8 @@ function App() {
             onMouseDown={handleMouseDown}
             onMouseOut={handleMouseOut}
             onDoubleClick={handleDoubleClick}
+            width={canvasSize.width}
+            height={canvasSize.height}
           ></canvas>
         </div>
         {isDisplayManual && (
