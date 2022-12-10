@@ -5,6 +5,7 @@
     padding: 0;
 }
 .leftPanel {
+    display: block;
     width: 400px;
     height: 100vh;
     background: #F1F1F1;
@@ -29,12 +30,30 @@
     flex-direction: column;
     gap: 8px;
 }
+.menu {
+    display: none;
+}
 
 @media screen and (max-width: 1179px) {
-    .hideContent {
+    /* .hideContent {
         display: flex;
     }
     .app {
         display: none;
+    } */
+    .leftPanel {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        padding-top: 4rem;
+    }
+    .leftPanel.show {
+        display: block;
+    }
+    .menu {
+        display: flex;
+        position: absolute;
+        z-index: 100;
     }
 }

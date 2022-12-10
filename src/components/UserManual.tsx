@@ -19,9 +19,13 @@ const modalStyle = {
     padding: "24px",
     border: "none",
     borderRadius: "16px",
+    maxWidth: '800px',
+    width: '90%',
+    zIndex: 500,
   },
   overlay: {
     background: "rgba(33, 33, 33, 0.5)",
+    zIndex: 500,
   },
 };
 const UserManual = ({ onClose }: Props) => {
@@ -39,7 +43,7 @@ const UserManual = ({ onClose }: Props) => {
   const renderPage1 = () => {
     return (
       <>
-        <img src="images/manual-01.png" width="800px" />
+        <img src="images/manual-01.png" width="100%" />
         <div>{page} of 2</div>
         <div style={{ display: "flex", gap: "16px" }}>
           <Button
@@ -64,7 +68,7 @@ const UserManual = ({ onClose }: Props) => {
   const renderPage2 = () => {
     return (
       <>
-        <img src="images/manual-02.png" width="800px" />
+        <img src="images/manual-02.png" width="100%" />
         <div>{page} of 2</div>
         <div style={{ display: "flex", gap: "16px" }}>
           <Button

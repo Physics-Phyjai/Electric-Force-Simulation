@@ -17,9 +17,9 @@ import {
 } from "./utils/random";
 import UserManual from "./components/UserManual";
 
-const minimumScreenWidth = 1179;
 function App() {
   const [size, setSize] = useState([0, 0]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const initCharge = () => {
     return new Charge(
@@ -153,13 +153,13 @@ function App() {
       const newChargeList = [...chargeList];
       const xPosition = to2Decimal(
         (event.clientX - canvasOffset.x) / 25 +
-        Math.floor(currentPosition.x / 25) -
-        101
+          Math.floor(currentPosition.x / 25) -
+          101
       );
       const yPosition = to2Decimal(
         101 -
-        (event.clientY - canvasOffset.y) / 25 -
-        Math.floor(currentPosition.y / 25)
+          (event.clientY - canvasOffset.y) / 25 -
+          Math.floor(currentPosition.y / 25)
       );
       newChargeList[dragChargeIndex].x = xPosition;
       newChargeList[dragChargeIndex].y = yPosition;
@@ -258,21 +258,39 @@ function App() {
     }
   };
 
-  const showUserManual = () => {
-    setIsDisplayManual(true);
-  };
+  useEffect(() => {
+    const element = document.getElementById("left");
+    if (element) {
+      if (isMenuOpen) {
+        element.classList.add(style.show);
+      } else {
+        element.classList.remove(style.show);
+      }
+    }
+  }, [isMenuOpen]);
 
   return (
     <>
-      <div className={style.hideContent}>
-        <div>The current screen size is not supported by the app. </div>
-        <div>
-          Please try rotating your device to landscape mode or using a larger
-          screen.
-        </div>
+      <div
+        className={style.menu}
+        style={{
+          cursor: "pointer",
+          background: "#858DE8",
+          borderRadius: "50%",
+          top: "25px",
+          left: "25px",
+          padding: "12px",
+          width: "48px",
+          height: "48px",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        <img src="images/menu.svg" width="24px" height="24px"></img>
       </div>
       <div className={style.app}>
-        <div className={style.leftPanel}>
+        <div className={style.leftPanel} id="left">
           <div style={{ maxHeight: "95vh", overflow: "scroll" }}>
             {chargeList.length > 0 ? (
               <>
@@ -295,8 +313,9 @@ function App() {
                 ))}
               </>
             ) : (
-              <div style={{ margin: '1rem 0 ', textAlign: 'center' }}>
-                There is no charge in the simulation now. Click on the "Add new charge" button to start adding a new charge.
+              <div style={{ margin: "1rem 0 ", textAlign: "center" }}>
+                There is no charge in the simulation now. Click on the "Add new
+                charge" button to start adding a new charge.
               </div>
             )}
           </div>
@@ -328,7 +347,7 @@ function App() {
             onDoubleClick={handleDoubleClick}
           ></canvas>
         </div>
-        {isDisplayManual && size[0] > 1179 && (
+        {isDisplayManual && (
           <UserManual onClose={() => setIsDisplayManual(false)} />
         )}
         <div
