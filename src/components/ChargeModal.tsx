@@ -6,7 +6,7 @@ import InputText from "./InputText";
 import SliderInput from "./SliderInput";
 import Button from "./Button";
 import { Force } from "../type/force";
-
+import "../style/modal.css";
 import styles from "../style/ChargeModal.module.css";
 
 export enum Mode {
@@ -44,6 +44,8 @@ const modalStyle = {
     padding: "24px",
     border: "none",
     borderRadius: "16px",
+    maxHeight: '85vh',
+    overflow: 'auto'
   },
   overlay: {
     background: "rgba(33, 33, 33, 0.5)",

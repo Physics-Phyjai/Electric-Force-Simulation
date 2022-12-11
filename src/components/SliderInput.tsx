@@ -51,10 +51,16 @@ const SliderInput: React.FC<SlideInputProps> = ({
       if (value >= min && value < 0) {
         const right = Math.round((value / min) * 50);
         const left = 50 - right;
-        element.setAttribute('style', `left: ${left}% !important; width: ${right}% !important; display: block; height: 4px;`)
+        element.setAttribute(
+          "style",
+          `left: ${left}% !important; width: ${right}% !important; display: block; height: 4px;`
+        );
       } else if (value >= 0 && value <= max) {
         const right = Math.round((value / max) * 50);
-        element.setAttribute('style', `left: 50% !important; width: ${right}% !important; display: block; height: 4px;`)
+        element.setAttribute(
+          "style",
+          `left: 50% !important; width: ${right}% !important; display: block; height: 4px;`
+        );
       }
     }
   };
@@ -68,10 +74,10 @@ const SliderInput: React.FC<SlideInputProps> = ({
     }
   };
   useEffect(() => {
-    const element = document.createElement('span');
-    element.className = 'custom-track';
+    const element = document.createElement("span");
+    element.className = "custom-track";
     document.getElementById(id)?.appendChild(element);
-  }, [])
+  }, []);
   useEffect(() => {
     calculateTrackValue(value);
   }, [value]);
@@ -83,6 +89,7 @@ const SliderInput: React.FC<SlideInputProps> = ({
         value={value}
         track={false}
         onChange={onChange}
+        onChangeCommitted={(e, n) => onChange(e as Event, n, 0)}
         aria-labelledby="track-inverted-slider"
         step={1}
         min={min}

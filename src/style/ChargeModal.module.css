@@ -2,7 +2,7 @@
   width: 320px;
   display: flex;
   flex-direction: column;
-  gap: 12px; 
+  gap: 12px;
   user-select: none;
 }
 
@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  color: #858DE8;
+  color: #858de8;
 }
 .inputContainer > span {
   width: calc(100% - 8px);
