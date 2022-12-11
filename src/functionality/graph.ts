@@ -20,7 +20,7 @@ const drawGrid = (
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
 
-    if (i == x_axis_distance_grid_lines) canvasCTX.strokeStyle = "#333333";
+    if (i == x_axis_distance_grid_lines) canvasCTX.strokeStyle = "#222222";
     else canvasCTX.strokeStyle = "#e9e9e9";
 
     if (i == num_lines_x) {
@@ -31,12 +31,13 @@ const drawGrid = (
       canvasCTX.lineTo(canvasSize.width, grid_size * i + 0.5);
     }
     canvasCTX.stroke();
+    canvasCTX.closePath();
   }
 
   for (let i = 0; i <= num_lines_y; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
-    if (i == y_axis_distance_grid_lines) canvasCTX.strokeStyle = "#333333";
+    if (i == y_axis_distance_grid_lines) canvasCTX.strokeStyle = "#222222";
     else canvasCTX.strokeStyle = "#e9e9e9";
 
     if (i == num_lines_y) {
@@ -47,12 +48,13 @@ const drawGrid = (
       canvasCTX.lineTo(grid_size * i + 0.5, canvasSize.height);
     }
     canvasCTX.stroke();
+    canvasCTX.closePath();
   }
 
   for (let i = 1; i < num_lines_y - y_axis_distance_grid_lines; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
-    canvasCTX.strokeStyle = "#333333";
+    canvasCTX.strokeStyle = "#222222";
 
     canvasCTX.moveTo(
       grid_size * i + 0.5,
@@ -72,6 +74,7 @@ const drawGrid = (
         grid_size * x_axis_distance_grid_lines + 15
       );
     }
+    canvasCTX.closePath();
   }
   canvasCTX.fillText(
     `0`,
@@ -82,7 +85,7 @@ const drawGrid = (
   for (let i = 1; i < y_axis_distance_grid_lines; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
-    canvasCTX.strokeStyle = "#333333";
+    canvasCTX.strokeStyle = "#222222";
 
     canvasCTX.moveTo(
       grid_size * i + 0.5,
@@ -102,12 +105,13 @@ const drawGrid = (
         grid_size * x_axis_distance_grid_lines + 15
       );
     }
+    canvasCTX.closePath();
   }
 
   for (let i = 1; i < num_lines_x - x_axis_distance_grid_lines; i++) {
     canvasCTX.beginPath();
     canvasCTX.lineWidth = 1;
-    canvasCTX.strokeStyle = "#333333";
+    canvasCTX.strokeStyle = "#222222";
 
     canvasCTX.moveTo(
       grid_size * y_axis_distance_grid_lines - 3,
@@ -127,6 +131,7 @@ const drawGrid = (
         grid_size * x_axis_distance_grid_lines + grid_size * i + 3
       );
     }
+    canvasCTX.closePath();
   }
 
   for (let i = 1; i < x_axis_distance_grid_lines; i++) {
@@ -152,6 +157,7 @@ const drawGrid = (
         grid_size * x_axis_distance_grid_lines - grid_size * i + 3
       );
     }
+    canvasCTX.closePath();
   }
 };
 
