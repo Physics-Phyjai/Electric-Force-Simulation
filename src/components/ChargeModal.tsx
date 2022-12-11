@@ -45,10 +45,12 @@ const modalStyle = {
     border: "none",
     borderRadius: "16px",
     maxHeight: '85vh',
-    overflow: 'auto'
+    overflow: 'auto',
+    zIndex: 500,
   },
   overlay: {
     background: "rgba(33, 33, 33, 0.5)",
+    zIndex: 500,
   },
 };
 
