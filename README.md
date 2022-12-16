@@ -9,6 +9,8 @@
 
 ### Access Web Application at: https://efs.ggolfz.me
 
+### Presentation Video: https://youtu.be/8wXML7_UXEI
+
 ### Run Project Locally
 
 The project requires nodejs with package manager (npm, yarn, pnpm)
