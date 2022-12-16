@@ -216,15 +216,13 @@ const drawCharge = (
     let textX =
       fromX +
       Math.min(Math.abs(dx / 2), grid_size * 2) * (dx > 0 ? 1 : -1) +
-      Math.abs(15 * Math.sin(angle)) -
-      10;
+      Math.abs(15 * Math.sin(angle)) - 5;
     let textY =
       fromY +
       Math.min(Math.abs(dy / 2), grid_size * 2) * (dy > 0 ? 1 : -1) +
-      Math.abs(15 * Math.cos(angle)) -
-      10;
+      Math.abs(15 * Math.cos(angle)) - 10;
     if (width + grid_size * 2 > Math.sqrt(dx ** 2 + dy ** 2)) {
-      textY = fromY + dy / 2 + charge_radius * 2;
+      textY = fromY + dy / 2 + charge_radius * 2 + 10;
     }
     canvasCTX.fillStyle = "#fffd";
     canvasCTX.fillRect(textX, textY - 14, width + 8, 20);
