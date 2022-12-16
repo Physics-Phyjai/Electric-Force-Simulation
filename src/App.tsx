@@ -404,7 +404,7 @@ function App() {
                 {chargeList.map((charge, index) => (
                   <ChargeCard
                     charge={charge}
-                    key={charge.name}
+                    key={index}
                     onClickEdit={() => {
                       setIsModalOpen(true);
                       setCurrentChargeIndex(index);
@@ -524,8 +524,9 @@ function App() {
                 setChargeList([...chargeList, newCharge]);
                 break;
               case Mode.Edit:
-                chargeList[currentChargeIndex] = newCharge;
-                setChargeList([...chargeList]);
+                const tempChargeList = [...chargeList];
+                tempChargeList[currentChargeIndex] = newCharge;
+                setChargeList(tempChargeList);
             }
           }}
         />
